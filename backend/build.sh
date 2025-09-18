@@ -24,4 +24,8 @@ python manage.py collectstatic --no-input
 echo "🗄️ Running migrations..."
 python manage.py migrate
 
+# Create default categories
+echo "📂 Creating default categories..."
+python manage.py create_categories
+
 echo "✅ Build completed successfully!"
