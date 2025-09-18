@@ -26,6 +26,9 @@ python manage.py migrate
 
 # Create default categories
 echo "📂 Creating default categories..."
-python manage.py create_categories
+python manage.py create_categories || {
+    echo "⚠️ Management command failed, trying alternative method..."
+    python create_categories_simple.py || echo "⚠️ Alternative method also failed, continuing..."
+}
 
 echo "✅ Build completed successfully!"
