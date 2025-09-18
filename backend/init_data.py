@@ -10,6 +10,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'finance_api.settings')
 django.setup()
 
 from apps.categories.models import Category
+from apps.notifications.services import NotificationService
 
 def create_default_categories():
     """Crear categorías por defecto"""
@@ -34,7 +35,16 @@ def create_default_categories():
         else:
             print(f"Categoría ya existe: {category.nombre}")
 
+def check_notifications():
+    """Verificar y crear notificaciones para metas existentes"""
+    try:
+        NotificationService.check_and_create_goal_notifications()
+        print("Notificaciones verificadas")
+    except Exception as e:
+        print(f"Error al verificar notificaciones: {e}")
+
 if __name__ == '__main__':
     print("Inicializando datos por defecto...")
     create_default_categories()
+    check_notifications()
     print("¡Datos inicializados correctamente!")

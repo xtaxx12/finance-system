@@ -8,6 +8,7 @@ from .models import SavingGoal
 from .serializers import SavingGoalSerializer
 from apps.transactions.models import Expense
 from apps.categories.models import Category
+from apps.notifications.services import NotificationService
 
 class SavingGoalViewSet(viewsets.ModelViewSet):
     serializer_class = SavingGoalSerializer
@@ -71,11 +72,22 @@ class SavingGoalViewSet(viewsets.ModelViewSet):
             )
         
         # Actualizar la meta
+        old_percentage = goal.porcentaje_completado
         goal.monto_actual += amount_decimal
         
+        # Verificar hitos alcanzados
+        new_percentage = goal.porcentaje_completado
+        milestones = [25, 50, 75]
+        
+        for milestone in milestones:
+            if old_percentage < milestone <= new_percentage:
+                NotificationService.notify_milestone_reached(goal, milestone)
+        
         # Marcar como completada si se alcanzó el objetivo
-        if goal.monto_actual >= goal.monto_objetivo:
+        if goal.monto_actual >= goal.monto_objetivo and not goal.completada:
             goal.completada = True
+            # Crear notificación de meta completada
+            NotificationService.notify_goal_completed(goal)
             
         goal.save()
         

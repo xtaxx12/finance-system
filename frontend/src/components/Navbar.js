@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import NotificationBell from './NotificationBell';
 import toast from 'react-hot-toast';
 
 const Navbar = () => {
@@ -66,6 +67,7 @@ const Navbar = () => {
               <Link to="/" style={linkStyle}>Dashboard</Link>
               <Link to="/transactions" style={linkStyle}>Transacciones</Link>
               <Link to="/goals" style={linkStyle}>Metas</Link>
+              <NotificationBell />
               <span style={{ color: 'white', marginLeft: '20px' }}>
                 Hola, {user.first_name || user.username}
               </span>
