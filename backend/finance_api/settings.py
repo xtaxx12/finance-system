@@ -143,6 +143,10 @@ CORS_ALLOWED_ORIGINS = [
     "https://*.onrender.com",
 ]
 
+# Para desarrollo, permitir todos los orígenes temporalmente
+if DEBUG or 'RENDER' in os.environ:
+    CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_CREDENTIALS = True
 
 # CSRF settings
@@ -166,6 +170,21 @@ if 'RENDER' in os.environ:
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    
+    # Configuración CORS específica para Render
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOW_CREDENTIALS = True
+    CORS_ALLOWED_HEADERS = [
+        'accept',
+        'accept-encoding',
+        'authorization',
+        'content-type',
+        'dnt',
+        'origin',
+        'user-agent',
+        'x-csrftoken',
+        'x-requested-with',
+    ]
     
     # Usar SQLite si hay problemas con PostgreSQL
     if os.environ.get('USE_SQLITE'):
