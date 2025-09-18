@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'apps.goals',
     'apps.notifications',
     'apps.budgets',
+    'apps.loans',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +64,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': config('DB_NAME', default='finance_db'),
         'USER': config('DB_USER', default='postgres'),
-        'PASSWORD': config('DB_PASSWORD', default='password'),
+        'PASSWORD': config('DB_PASSWORD', default='admin123'),
         'HOST': config('DB_HOST', default='localhost'),
         'PORT': config('DB_PORT', default='5432'),
     }

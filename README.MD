@@ -10,9 +10,10 @@ La aplicación está **100% funcional** y lista para usar. Incluye:
 - ✅ Dashboard interactivo con gráficas
 - ✅ Gestión completa de ingresos y gastos
 - ✅ Sistema de metas de ahorro
+- ✅ Sistema de préstamos y deudas
 - ✅ Recomendaciones inteligentes
 - ✅ Autenticación de usuarios
-- ✅ Diseño responsivo
+- ✅ Diseño responsivo con menú hamburguesa
 
 ---
 
@@ -46,7 +47,18 @@ La aplicación está **100% funcional** y lista para usar. Incluye:
   - Cálculo de cuota de ahorro mensual para cumplir la meta en el plazo deseado.
   - Ejemplo: Ahorrar $1500 en 10 meses → $150/mes.
 
-### 4. Recomendaciones para Ahorrar
+### 4. Sistema de Préstamos y Deudas
+- **Gestión de Préstamos**
+  - Registrar préstamos con monto total, número de cuotas y fecha.
+  - Seguimiento visual del progreso de pago.
+- **Registro de Pagos**
+  - Agregar pagos individuales con fecha y monto.
+  - Historial completo de pagos realizados.
+- **Integración con Balance**
+  - Balance disponible considerando deudas pendientes.
+  - Alertas cuando el balance no cubre las deudas.
+
+### 5. Recomendaciones para Ahorrar
 - Análisis automático de gastos con consejos personalizados.
 - Ejemplo: "Tu gasto en *Comida a domicilio* representa el 25% de tus gastos. Reduciendo un 10% ahorrarías $X."
 
@@ -194,6 +206,13 @@ Ver archivo `setup_instructions.md` para instrucciones detalladas.
 - **Cálculos automáticos**: Ahorro mensual sugerido
 - **Gestión de ahorros**: Agregar dinero a las metas
 
+### ✅ Sistema de Préstamos y Deudas
+- **Gestión completa**: Crear, editar y eliminar préstamos
+- **Seguimiento de pagos**: Registrar pagos individuales con historial
+- **Cálculos automáticos**: Progreso, montos restantes, cuotas pagadas
+- **Integración con balance**: Balance real considerando deudas
+- **Visualización clara**: Barras de progreso, estados, alertas
+
 ### ✅ Categorías Predefinidas
 - Comida, Transporte, Vivienda, Ocio, Salud, Educación, Ropa, Otros
 - Colores e iconos personalizados
@@ -226,6 +245,13 @@ Goals:
 GET  /api/goals/
 POST /api/goals/
 POST /api/goals/{id}/add_savings/
+
+Loans:
+GET  /api/loans/
+POST /api/loans/
+GET  /api/loans/summary/
+POST /api/loans/{id}/add_payment/
+DELETE /api/loans/{id}/
 
 Categories:
 GET  /api/categories/

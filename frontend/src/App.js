@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { BalanceProvider } from './contexts/BalanceContext';
 import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
@@ -10,13 +11,15 @@ import Register from './pages/Register';
 import Transactions from './pages/Transactions';
 import Goals from './pages/Goals';
 import Budgets from './pages/Budgets';
+import Loans from './pages/Loans';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Router>
+        <BalanceProvider>
+          <Router>
           <div className="App">
             <Navbar />
             <main style={{ paddingTop: '1rem' }}>
@@ -43,6 +46,11 @@ function App() {
                     <Budgets />
                   </ProtectedRoute>
                 } />
+                <Route path="/loans" element={
+                  <ProtectedRoute>
+                    <Loans />
+                  </ProtectedRoute>
+                } />
               </Routes>
             </main>
             <Toaster 
@@ -59,6 +67,7 @@ function App() {
             />
           </div>
         </Router>
+        </BalanceProvider>
       </AuthProvider>
     </ThemeProvider>
   );

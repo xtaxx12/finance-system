@@ -342,6 +342,30 @@ body {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Hamburger Menu */
+.hamburger-menu {
+  position: relative;
+  z-index: 1001;
+}
+
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .container {
@@ -350,6 +374,18 @@ body {
   
   .modern-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .modern-grid-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .modern-grid-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .modern-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
   }
   
   .financial-metric {
@@ -362,6 +398,53 @@ body {
   
   .modern-card {
     padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .modern-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .modern-card-title {
+    font-size: 1.125rem;
+  }
+  
+  /* Navbar responsive */
+  nav {
+    position: relative;
+  }
+  
+  .nav-links {
+    display: none;
+  }
+  
+  .mobile-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: inherit;
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  /* Form responsive */
+  .modern-form-control {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  /* Button responsive */
+  .modern-btn {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .modern-btn:last-child {
+    margin-bottom: 0;
   }
 }
 
@@ -371,6 +454,47 @@ body {
   }
   
   .modern-card-title {
-    font-size: 1.125rem;
+    font-size: 1rem;
+  }
+  
+  .modern-grid-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  .financial-metric {
+    padding: 1rem 0.75rem;
+  }
+  
+  .financial-metric-icon {
+    font-size: 2rem;
+  }
+  
+  .container {
+    padding: 0 0.75rem;
+  }
+  
+  /* Smaller text on very small screens */
+  .modern-card-subtitle {
+    font-size: 0.75rem;
+  }
+  
+  .financial-metric-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* Landscape phone adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+  .financial-metric {
+    padding: 1rem;
+  }
+  
+  .financial-metric-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .financial-metric-value {
+    font-size: 1.25rem;
   }
 }

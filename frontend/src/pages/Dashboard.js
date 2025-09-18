@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
 import { Pie, Bar } from 'react-chartjs-2';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
+import { useBalance } from '../contexts/BalanceContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -11,6 +13,8 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const { colors, isDarkMode } = useTheme();
+  const { user } = useAuth();
+  const { balance, totalDebt, availableBalance } = useBalance();
 
   useEffect(() => {
     fetchDashboardData();
@@ -281,7 +285,7 @@ const Dashboard = () => {
       </div>
 
       {/* Métricas Principales */}
-      <div className="modern-grid modern-grid-3" style={{ marginBottom: '2rem' }}>
+      <div className="modern-grid modern-grid-4" style={{ marginBottom: '2rem' }}>
         <div
           className="financial-metric animate-slide-in"
           style={{
@@ -359,7 +363,134 @@ const Dashboard = () => {
             <span>{dashboardData.balance >= 0 ? 'Positivo' : 'Negativo'}</span>
           </div>
         </div>
+
+        <div
+          className="financial-metric animate-slide-in"
+          style={{
+            '--gradient': 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+            animationDelay: '0.4s'
+          }}
+        >
+          <div className="financial-metric-icon">🏦</div>
+          <div className="financial-metric-label">Deudas Pendientes</div>
+          <div
+            className="financial-metric-value"
+            style={{ color: totalDebt > 0 ? '#F59E0B' : colors.income }}
+          >
+            {formatCurrency(totalDebt)}
+          </div>
+          <div
+            className="financial-metric-change"
+            style={{ color: totalDebt > 0 ? '#F59E0B' : colors.income }}
+          >
+            <span>{totalDebt > 0 ? '⚠️' : '✅'}</span>
+            <span>{totalDebt > 0 ? 'Pendiente' : 'Sin deudas'}</span>
+          </div>
+        </div>
       </div>
+
+      {/* Resumen de Préstamos */}
+      {totalDebt > 0 && (
+        <div className="modern-card animate-fade-in" style={{ marginBottom: '2rem', animationDelay: '0.5s' }}>
+          <div className="modern-card-header">
+            <div className="modern-card-title">
+              <span>🏦</span>
+              Resumen de Préstamos
+            </div>
+            <div className="modern-card-subtitle">
+              Estado actual de tus deudas y compromisos financieros
+            </div>
+          </div>
+
+          <div className="modern-grid modern-grid-3">
+            <div style={{
+              padding: '1.5rem',
+              background: 'linear-gradient(135deg, #F59E0B20 0%, #D9770620 100%)',
+              borderRadius: '1rem',
+              border: '2px solid #F59E0B30',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💰</div>
+              <div style={{ color: colors.textSecondary, fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                Total Adeudado
+              </div>
+              <div style={{ color: '#F59E0B', fontSize: '1.5rem', fontWeight: '700' }}>
+                {formatCurrency(totalDebt)}
+              </div>
+            </div>
+
+            <div style={{
+              padding: '1.5rem',
+              background: balance >= totalDebt ? 
+                'linear-gradient(135deg, #10B98120 0%, #05966920 100%)' :
+                'linear-gradient(135deg, #EF444420 0%, #DC262620 100%)',
+              borderRadius: '1rem',
+              border: balance >= totalDebt ? '2px solid #10B98130' : '2px solid #EF444430',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
+                {balance >= totalDebt ? '✅' : '⚠️'}
+              </div>
+              <div style={{ color: colors.textSecondary, fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                Balance Disponible
+              </div>
+              <div style={{ 
+                color: balance >= totalDebt ? '#10B981' : '#EF4444', 
+                fontSize: '1.5rem', 
+                fontWeight: '700' 
+              }}>
+                {formatCurrency(availableBalance)}
+              </div>
+            </div>
+
+            <div style={{
+              padding: '1.5rem',
+              background: 'linear-gradient(135deg, #3B82F620 0%, #1E40AF20 100%)',
+              borderRadius: '1rem',
+              border: '2px solid #3B82F630',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📊</div>
+              <div style={{ color: colors.textSecondary, fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                Ratio Deuda/Ingresos
+              </div>
+              <div style={{ 
+                color: '#3B82F6', 
+                fontSize: '1.5rem', 
+                fontWeight: '700' 
+              }}>
+                {dashboardData?.total_ingresos > 0 ? 
+                  `${((totalDebt / dashboardData.total_ingresos) * 100).toFixed(1)}%` : 
+                  'N/A'
+                }
+              </div>
+            </div>
+          </div>
+
+          {balance < totalDebt && (
+            <div style={{
+              marginTop: '1.5rem',
+              padding: '1rem',
+              background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
+              borderRadius: '0.75rem',
+              border: '1px solid #F59E0B',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem'
+            }}>
+              <div style={{ fontSize: '1.5rem' }}>⚠️</div>
+              <div>
+                <div style={{ fontWeight: '600', color: '#92400E', marginBottom: '0.25rem' }}>
+                  Atención: Balance insuficiente
+                </div>
+                <div style={{ color: '#A16207', fontSize: '0.875rem' }}>
+                  Tu balance actual no cubre el total de tus deudas. Considera generar más ingresos o renegociar tus préstamos.
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Gráficos Principales */}
       <div className="modern-grid modern-grid-2" style={{ marginBottom: '2rem' }}>
