@@ -53,15 +53,20 @@ const Goals = () => {
 
   const handleAddSavings = async (goalId) => {
     try {
-      await api.post(`/goals/${goalId}/add_savings/`, {
+      const response = await api.post(`/goals/${goalId}/add_savings/`, {
         amount: savingsAmount
       });
-      toast.success('Ahorro agregado exitosamente');
+      
+      // Mostrar mensaje personalizado si está disponible
+      const message = response.data.message || 'Ahorro agregado exitosamente';
+      toast.success(message);
+      
       setSavingsAmount('');
       setShowAddSavings(null);
       fetchGoals();
     } catch (error) {
-      toast.error('Error al agregar ahorro');
+      const errorMessage = error.response?.data?.error || 'Error al agregar ahorro';
+      toast.error(errorMessage);
     }
   };
 
@@ -303,13 +308,25 @@ const Goals = () => {
                       placeholder="0.00"
                     />
                   </div>
+                  <div style={{ 
+                    fontSize: '12px', 
+                    color: '#666', 
+                    marginBottom: '10px',
+                    padding: '8px',
+                    backgroundColor: '#e3f2fd',
+                    borderRadius: '4px',
+                    border: '1px solid #bbdefb'
+                  }}>
+                    💡 <strong>Nota:</strong> Este monto se registrará automáticamente como un gasto de "Ahorro" 
+                    para reflejar correctamente en tu balance financiero.
+                  </div>
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <button 
                       className="btn btn-success"
                       onClick={() => handleAddSavings(goal.id)}
                       disabled={!savingsAmount || parseFloat(savingsAmount) <= 0}
                     >
-                      Confirmar
+                      Confirmar Ahorro
                     </button>
                     <button 
                       className="btn btn-secondary"
