@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 
 const Budgets = () => {
+  const { colors, isDarkMode } = useTheme();
   const [currentBudget, setCurrentBudget] = useState(null);
   const [categories, setCategories] = useState([]);
   const [budgetSummary, setBudgetSummary] = useState(null);
@@ -129,23 +131,51 @@ const Budgets = () => {
   }
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h1>💰 Presupuestos Mensuales</h1>
-        <div style={{ display: 'flex', gap: '10px' }}>
+    <div className="container animate-fade-in">
+      {/* Header */}
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        marginBottom: '2rem' 
+      }}>
+        <div>
+          <h1 style={{ 
+            fontSize: '2.5rem', 
+            fontWeight: '700', 
+            color: colors.textPrimary,
+            marginBottom: '0.5rem',
+            background: colors.gradientPrimary,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
+          }}>
+            💰 Presupuestos Mensuales
+          </h1>
+          <p style={{ 
+            color: colors.textSecondary, 
+            fontSize: '1.125rem',
+            margin: 0 
+          }}>
+            Controla tus gastos y mantente dentro de tus límites
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
           {currentBudget && (
             <button 
-              className="btn btn-success"
+              className="modern-btn modern-btn-success"
               onClick={() => setShowCategoryForm(!showCategoryForm)}
             >
+              <span>{showCategoryForm ? '✕' : '🏷️'}</span>
               {showCategoryForm ? 'Cancelar' : 'Agregar Categoría'}
             </button>
           )}
           {!currentBudget && (
             <button 
-              className="btn btn-primary"
+              className="modern-btn modern-btn-primary"
               onClick={() => setShowCreateForm(!showCreateForm)}
             >
+              <span>{showCreateForm ? '✕' : '💰'}</span>
               {showCreateForm ? 'Cancelar' : 'Crear Presupuesto'}
             </button>
           )}
