@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'apps.categories',
     'apps.goals',
     'apps.notifications',
+    'apps.budgets',
 ]
 
 MIDDLEWARE = [

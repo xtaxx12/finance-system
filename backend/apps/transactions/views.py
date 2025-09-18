@@ -22,6 +22,150 @@ class ExpenseViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Expense.objects.filter(usuario=self.request.user).select_related('categoria')
+    
+    def perform_create(self, serializer):
+        """Actualizar presupuestos cuando se crea un gasto"""
+        expense = serializer.save()
+        self.update_budgets_after_expense(expense)
+    
+    def perform_update(self, serializer):
+        """Actualizar presupuestos cuando se modifica un gasto"""
+        expense = serializer.save()
+        self.update_budgets_after_expense(expense)
+    
+    def perform_destroy(self, instance):
+        """Actualizar presupuestos cuando se elimina un gasto"""
+        # Guardar datos antes de eliminar
+        usuario = instance.usuario
+        fecha = instance.fecha
+        categoria = instance.categoria
+        
+        super().perform_destroy(instance)
+        
+        # Actualizar presupuestos después de eliminar
+        self.update_budgets_after_deletion(usuario, fecha, categoria)
+    
+    def update_budgets_after_expense(self, expense):
+        """Actualizar presupuestos relacionados después de crear/modificar un gasto"""
+        try:
+            from apps.budgets.models import MonthlyBudget, CategoryBudget
+            
+            # Buscar presupuesto mensual correspondiente
+            monthly_budget = MonthlyBudget.objects.filter(
+                usuario=expense.usuario,
+                año=expense.fecha.year,
+                mes=expense.fecha.month,
+                activo=True
+            ).first()
+            
+            if monthly_budget:
+                # Actualizar gastos del presupuesto mensual
+                self.recalculate_monthly_budget(monthly_budget)
+                
+                # Actualizar presupuesto de categoría si existe
+                if expense.categoria:
+                    category_budget = CategoryBudget.objects.filter(
+                        presupuesto_mensual=monthly_budget,
+                        categoria=expense.categoria
+                    ).first()
+                    
+                    if category_budget:
+                        self.recalculate_category_budget(category_budget)
+        except Exception as e:
+            # Log error but don't fail the transaction
+            print(f"Error updating budgets: {e}")
+    
+    def update_budgets_after_deletion(self, usuario, fecha, categoria):
+        """Actualizar presupuestos después de eliminar un gasto"""
+        try:
+            from apps.budgets.models import MonthlyBudget, CategoryBudget
+            
+            monthly_budget = MonthlyBudget.objects.filter(
+                usuario=usuario,
+                año=fecha.year,
+                mes=fecha.month,
+                activo=True
+            ).first()
+            
+            if monthly_budget:
+                self.recalculate_monthly_budget(monthly_budget)
+                
+                if categoria:
+                    category_budget = CategoryBudget.objects.filter(
+                        presupuesto_mensual=monthly_budget,
+                        categoria=categoria
+                    ).first()
+                    
+                    if category_budget:
+                        self.recalculate_category_budget(category_budget)
+        except Exception as e:
+            print(f"Error updating budgets after deletion: {e}")
+    
+    def recalculate_monthly_budget(self, monthly_budget):
+        """Recalcular gastos totales del presupuesto mensual"""
+        inicio_mes = datetime(monthly_budget.año, monthly_budget.mes, 1).date()
+        if monthly_budget.mes == 12:
+            fin_mes = datetime(monthly_budget.año + 1, 1, 1).date() - timedelta(days=1)
+        else:
+            fin_mes = datetime(monthly_budget.año, monthly_budget.mes + 1, 1).date() - timedelta(days=1)
+        
+        total_gastado = Expense.objects.filter(
+            usuario=monthly_budget.usuario,
+            fecha__range=[inicio_mes, fin_mes]
+        ).aggregate(total=Sum('monto'))['total'] or 0
+        
+        monthly_budget.gastado_actual = total_gastado
+        monthly_budget.save()
+    
+    def recalculate_category_budget(self, category_budget):
+        """Recalcular gastos de una categoría específica"""
+        monthly_budget = category_budget.presupuesto_mensual
+        inicio_mes = datetime(monthly_budget.año, monthly_budget.mes, 1).date()
+        if monthly_budget.mes == 12:
+            fin_mes = datetime(monthly_budget.año + 1, 1, 1).date() - timedelta(days=1)
+        else:
+            fin_mes = datetime(monthly_budget.año, monthly_budget.mes + 1, 1).date() - timedelta(days=1)
+        
+        gasto_categoria = Expense.objects.filter(
+            usuario=monthly_budget.usuario,
+            categoria=category_budget.categoria,
+            fecha__range=[inicio_mes, fin_mes]
+        ).aggregate(total=Sum('monto'))['total'] or 0
+        
+        category_budget.gastado_actual = gasto_categoria
+        category_budget.save()
+        
+        # Verificar alertas
+        self.check_budget_alerts(category_budget)
+    
+    def check_budget_alerts(self, category_budget):
+        """Verificar y crear alertas de presupuesto"""
+        try:
+            from apps.budgets.models import BudgetAlert
+            
+            if category_budget.necesita_alerta:
+                # Verificar si ya existe una alerta reciente
+                existing_alert = BudgetAlert.objects.filter(
+                    usuario=category_budget.presupuesto_mensual.usuario,
+                    presupuesto_categoria=category_budget,
+                    activa=True,
+                    created_at__date=timezone.now().date()
+                ).exists()
+                
+                if not existing_alert:
+                    alert_type = 'category_exceeded' if category_budget.esta_excedido else 'category_warning'
+                    mensaje = f"Has gastado {category_budget.porcentaje_gastado:.1f}% de tu presupuesto en {category_budget.categoria.nombre}"
+                    
+                    BudgetAlert.objects.create(
+                        usuario=category_budget.presupuesto_mensual.usuario,
+                        tipo=alert_type,
+                        presupuesto_categoria=category_budget,
+                        mensaje=mensaje,
+                        porcentaje_gastado=category_budget.porcentaje_gastado,
+                        monto_excedido=max(category_budget.gastado_actual - category_budget.limite_asignado, 0)
+                    )
+        except Exception as e:
+            print(f"Error checking budget alerts: {e}")
 
     @action(detail=False, methods=['get'])
     def dashboard(self, request):

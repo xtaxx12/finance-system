@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Transactions from './pages/Transactions';
 import Goals from './pages/Goals';
+import Budgets from './pages/Budgets';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -33,6 +34,11 @@ function App() {
               <Route path="/goals" element={
                 <ProtectedRoute>
                   <Goals />
+                </ProtectedRoute>
+              } />
+              <Route path="/budgets" element={
+                <ProtectedRoute>
+                  <Budgets />
                 </ProtectedRoute>
               } />
             </Routes>

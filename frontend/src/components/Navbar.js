@@ -67,6 +67,7 @@ const Navbar = () => {
               <Link to="/" style={linkStyle}>Dashboard</Link>
               <Link to="/transactions" style={linkStyle}>Transacciones</Link>
               <Link to="/goals" style={linkStyle}>Metas</Link>
+              <Link to="/budgets" style={linkStyle}>Presupuestos</Link>
               <NotificationBell />
               <span style={{ color: 'white', marginLeft: '20px' }}>
                 Hola, {user.first_name || user.username}
