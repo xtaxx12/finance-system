@@ -266,12 +266,4 @@ GET  /api/categories/
 
 ---
 
-## 👨‍💻 Desarrollado por IA
-
-Este sistema fue desarrollado completamente siguiendo las especificaciones del README original, implementando todas las funcionalidades solicitadas con las mejores prácticas de desarrollo web moderno.
-
-**Tiempo de desarrollo**: Implementación completa en una sola sesión
-**Líneas de código**: ~2000+ líneas (Backend + Frontend)
-**Archivos creados**: 30+ archivos organizados
-
-¡El sistema está listo para usar y puede ser extendido según necesidades futuras! 🎉
+## 👨‍💻 Desarrollado por Joel Rojas
