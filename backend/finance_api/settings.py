@@ -13,7 +13,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1', 
     '0.0.0.0',
     '.railway.app',
-    '.vercel.app'
+    '.vercel.app',
+    '.onrender.com'
 ]
 
 INSTALLED_APPS = [
@@ -139,6 +140,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "https://*.vercel.app",
     "https://*.railway.app",
+    "https://*.onrender.com",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -149,7 +151,21 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:3000",
     "https://*.vercel.app",
     "https://*.railway.app",
+    "https://*.onrender.com",
 ]
+
+# Configuración específica para Render
+import os
+if 'RENDER' in os.environ:
+    DEBUG = False
+    
+    # Hosts permitidos para Render
+    ALLOWED_HOSTS.extend(['.onrender.com'])
+    
+    # Configuración de archivos estáticos para Render
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Configuración de seguridad para producción
 if not DEBUG:
