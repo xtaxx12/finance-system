@@ -1,0 +1,1 @@
+# Usando el modelo User por defecto de Django
