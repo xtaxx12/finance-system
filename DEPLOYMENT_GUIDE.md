@@ -54,13 +54,9 @@ Crear archivo `backend/vercel.json`:
     {
       "src": "finance_api/wsgi.py",
       "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
-    },
-    {
-      "src": "build_files.sh",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "staticfiles_build"
+      "config": { 
+        "maxLambdaSize": "15mb", 
+        "runtime": "python3.9"
       }
     }
   ],
@@ -77,24 +73,14 @@ Crear archivo `backend/vercel.json`:
 }
 ```
 
-### Paso 2: Crear script de build
-Crear archivo `backend/build_files.sh`:
-```bash
-#!/bin/bash
-echo "Building Django application for Vercel..."
-pip install -r requirements.txt
-python manage.py collectstatic --noinput --clear
-echo "Build completed successfully!"
-```
-
-### Paso 3: Actualizar requirements.txt
+### Paso 2: Actualizar requirements.txt
 Agregar a `backend/requirements.txt`:
 ```
 gunicorn==21.2.0
 whitenoise==6.6.0
 ```
 
-### Paso 4: Configurar settings para Vercel
+### Paso 3: Configurar settings para Vercel
 Actualizar `backend/finance_api/settings.py`:
 
 ```python
@@ -208,8 +194,11 @@ USE_TZ = True
 
 # Archivos estáticos para Vercel
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Configuración para Vercel
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -266,15 +255,15 @@ if not DEBUG:
 dj-database-url==2.1.0
 ```
 
-### Paso 5: Desplegar Backend en Vercel
+### Paso 4: Desplegar Backend en Vercel
 1. Ve a [vercel.com](https://vercel.com) y haz login
 2. Haz clic en "New Project"
 3. Selecciona tu repositorio de GitHub
 4. Configura el proyecto:
    - **Framework Preset**: Other
    - **Root Directory**: `backend`
-   - **Build Command**: `chmod +x build_files.sh && ./build_files.sh`
-   - **Output Directory**: `staticfiles_build`
+   - **Build Command**: Dejar vacío o `pip install -r requirements.txt`
+   - **Output Directory**: Dejar vacío
 5. Configura las variables de entorno:
    - `SECRET_KEY`: Una clave secreta fuerte
    - `DEBUG`: `False`
@@ -282,14 +271,21 @@ dj-database-url==2.1.0
    - `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`: De tu base de datos
 6. Haz clic en "Deploy"
 
-### Paso 6: Ejecutar migraciones
-Una vez desplegado, ejecuta las migraciones:
-1. Ve a tu proyecto en Vercel
-2. En la pestaña "Functions", busca tu función
-3. O usa Vercel CLI:
+### Paso 5: Ejecutar migraciones
+Una vez desplegado, ejecuta las migraciones usando Vercel CLI:
 ```bash
-vercel env pull
-python manage.py migrate
+# Instalar Vercel CLI
+npm install -g vercel
+
+# Login y conectar proyecto
+vercel login
+vercel link
+
+# Ejecutar migraciones
+vercel exec -- python manage.py migrate
+
+# Crear superusuario
+vercel exec -- python manage.py createsuperuser
 ```
 
 ---
