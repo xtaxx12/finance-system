@@ -4,6 +4,10 @@ set -o errexit
 
 echo "🚀 Starting build process..."
 
+# Check Python version
+echo "🐍 Python version:"
+python --version
+
 # Upgrade pip
 echo "⬆️ Upgrading pip..."
 pip install --upgrade pip

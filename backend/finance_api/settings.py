@@ -166,6 +166,15 @@ if 'RENDER' in os.environ:
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    
+    # Usar SQLite si hay problemas con PostgreSQL
+    if os.environ.get('USE_SQLITE'):
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 
 # Configuración de seguridad para producción
 if not DEBUG:
