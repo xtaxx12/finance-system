@@ -126,10 +126,6 @@ const Transactions = () => {
             fontWeight: '700', 
             color: colors.textPrimary,
             marginBottom: '0.5rem',
-            background: colors.gradientPrimary,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text'
           }}>
             💳 Transacciones
           </h1>
