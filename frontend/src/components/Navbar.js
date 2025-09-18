@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import NotificationBell from './NotificationBell';
@@ -10,9 +10,11 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const { colors, isDarkMode } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Todos los hooks deben estar antes de cualquier return condicional
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -25,6 +27,14 @@ const Navbar = () => {
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  // No mostrar navbar en páginas públicas
+  const publicPages = ['/welcome', '/login', '/register'];
+  const isPublicPage = publicPages.includes(location.pathname);
+
+  if (isPublicPage) {
+    return null;
+  }
 
   const handleLogout = async () => {
     try {

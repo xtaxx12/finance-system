@@ -5,7 +5,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { BalanceProvider } from './contexts/BalanceContext';
 import Navbar from './components/Navbar';
+import PublicNavbar from './components/PublicNavbar';
 import Dashboard from './pages/Dashboard';
+import Welcome from './pages/Welcome';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Transactions from './pages/Transactions';
@@ -21,9 +23,11 @@ function App() {
         <BalanceProvider>
           <Router>
           <div className="App">
+            <PublicNavbar />
             <Navbar />
-            <main style={{ paddingTop: '1rem' }}>
+            <main>
               <Routes>
+                <Route path="/welcome" element={<Welcome />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/" element={
