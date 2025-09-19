@@ -39,7 +39,15 @@ class LoanPaymentCreateSerializer(serializers.ModelSerializer):
         fields = ['amount', 'date', 'notes']
     
     def create(self, validated_data):
-        loan_id = self.context['view'].kwargs['loan_pk']
-        loan = Loan.objects.get(id=loan_id, user=self.context['request'].user)
+        # Obtener el loan_id desde el contexto de la vista
+        loan_id = self.context['view'].kwargs.get('pk') or self.context['view'].kwargs.get('loan_pk')
+        if not loan_id:
+            raise serializers.ValidationError("No se pudo identificar el préstamo")
+        
+        try:
+            loan = Loan.objects.get(id=loan_id, user=self.context['request'].user)
+        except Loan.DoesNotExist:
+            raise serializers.ValidationError("Préstamo no encontrado")
+        
         validated_data['loan'] = loan
         return super().create(validated_data)

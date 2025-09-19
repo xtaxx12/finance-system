@@ -48,19 +48,34 @@ class LoanViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def add_payment(self, request, pk=None):
         """Agrega un pago a un préstamo específico"""
-        loan = self.get_object()
-        serializer = LoanPaymentCreateSerializer(
-            data=request.data,
-            context={'request': request, 'view': self}
-        )
-        
-        if serializer.is_valid():
-            payment = serializer.save()
-            return Response(
-                LoanPaymentSerializer(payment).data,
-                status=status.HTTP_201_CREATED
+        try:
+            loan = self.get_object()
+            
+            # Verificar que el préstamo no esté completamente pagado
+            if loan.is_completed:
+                return Response(
+                    {'error': 'Este préstamo ya está completamente pagado'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            serializer = LoanPaymentCreateSerializer(
+                data=request.data,
+                context={'request': request, 'view': self}
             )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            if serializer.is_valid():
+                payment = serializer.save()
+                return Response(
+                    LoanPaymentSerializer(payment).data,
+                    status=status.HTTP_201_CREATED
+                )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+        except Exception as e:
+            return Response(
+                {'error': f'Error al procesar el pago: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
     
     @action(detail=True, methods=['get'])
     def payments(self, request, pk=None):
