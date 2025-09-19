@@ -186,6 +186,16 @@ if 'RENDER' in os.environ:
         'x-requested-with',
     ]
     
+    # Configuración de cookies para cross-domain
+    SESSION_COOKIE_SAMESITE = 'None'
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SAMESITE = 'None'
+    CSRF_COOKIE_SECURE = True
+    
+    # Configuración adicional para sesiones
+    SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = False
+    
     # Usar SQLite si hay problemas con PostgreSQL
     if os.environ.get('USE_SQLITE'):
         DATABASES = {
