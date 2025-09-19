@@ -138,21 +138,28 @@ if DEBUG:
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "https://*.vercel.app",
-    "https://*.railway.app",
-    "https://*.onrender.com",
+    "https://finance-frontend-tawny.vercel.app",
 ]
 
-# Para desarrollo, permitir todos los orígenes temporalmente
+# Para desarrollo y producción, permitir todos los orígenes temporalmente
 if DEBUG or 'RENDER' in os.environ:
     CORS_ALLOW_ALL_ORIGINS = True
+else:
+    # En producción, ser más específico
+    CORS_ALLOWED_ORIGINS.extend([
+        "https://finance-frontend-tawny.vercel.app",
+        "https://*.vercel.app",
+    ])
 
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_HEADERS = True
+CORS_ALLOW_ALL_METHODS = True
 
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://finance-frontend-tawny.vercel.app",
     "https://*.vercel.app",
     "https://*.railway.app",
     "https://*.onrender.com",
@@ -191,10 +198,19 @@ if 'RENDER' in os.environ:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SAMESITE = 'None'
     CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_DOMAIN = None  # Permitir cookies cross-domain
+    SESSION_COOKIE_DOMAIN = None
     
     # Configuración adicional para sesiones
     SESSION_COOKIE_HTTPONLY = True
     CSRF_COOKIE_HTTPONLY = False
+    
+    # Configuración adicional para cookies cross-domain
+    CSRF_TRUSTED_ORIGINS = [
+        "https://finance-frontend-tawny.vercel.app",
+        "https://*.vercel.app",
+        "https://*.onrender.com",
+    ]
     
     # Usar SQLite si hay problemas con PostgreSQL
     if os.environ.get('USE_SQLITE'):

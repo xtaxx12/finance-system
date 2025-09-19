@@ -3,7 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.utils import timezone
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, F
+from django.db import models
 from decimal import Decimal
 from .models import MonthlyBudget, CategoryBudget, BudgetAlert
 from .serializers import (
@@ -132,9 +133,9 @@ class MonthlyBudgetViewSet(viewsets.ModelViewSet):
         
         # Estadísticas
         category_budgets = budget.category_budgets.all()
-        categorias_excedidas = category_budgets.filter(gastado_actual__gt=models.F('limite_asignado')).count()
+        categorias_excedidas = category_budgets.filter(gastado_actual__gt=F('limite_asignado')).count()
         categorias_en_alerta = category_budgets.filter(
-            gastado_actual__gte=models.F('limite_asignado') * models.F('alerta_porcentaje') / 100
+            gastado_actual__gte=F('limite_asignado') * F('alerta_porcentaje') / 100
         ).count()
         
         # Categoría más gastada

@@ -3,6 +3,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth import login, logout
+from django.middleware.csrf import get_token
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
 
 @api_view(['POST'])
@@ -58,3 +61,12 @@ def update_profile_view(request):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+@ensure_csrf_cookie
+def csrf_token_view(request):
+    """Obtener token CSRF"""
+    return Response({
+        'csrfToken': get_token(request)
+    })

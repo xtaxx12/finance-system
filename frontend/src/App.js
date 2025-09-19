@@ -15,8 +15,11 @@ import Goals from './pages/Goals';
 import Budgets from './pages/Budgets';
 import Loans from './pages/Loans';
 import ProtectedRoute from './components/ProtectedRoute';
+import useCSRF from './hooks/useCSRF';
 
 function App() {
+  useCSRF(); // Inicializar CSRF token
+
   return (
     <ThemeProvider>
       <AuthProvider>

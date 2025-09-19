@@ -8,8 +8,25 @@ const api = axios.create({
   },
 });
 
-// Función para obtener el token CSRF
-const getCSRFToken = () => {
+// Variable para almacenar el token CSRF
+let csrfToken = null;
+
+// Función para obtener el token CSRF del servidor
+const fetchCSRFToken = async () => {
+  try {
+    const response = await axios.get(`${api.defaults.baseURL.replace('/api', '')}/api/auth/csrf/`, {
+      withCredentials: true,
+    });
+    csrfToken = response.data.csrfToken;
+    return csrfToken;
+  } catch (error) {
+    console.error('Error obteniendo CSRF token:', error);
+    return null;
+  }
+};
+
+// Función para obtener el token CSRF de las cookies
+const getCSRFTokenFromCookie = () => {
   const cookies = document.cookie.split(';');
   for (let cookie of cookies) {
     const [name, value] = cookie.trim().split('=');
@@ -20,12 +37,24 @@ const getCSRFToken = () => {
   return null;
 };
 
+// Función para obtener el token CSRF (primero de cookie, luego del servidor)
+const getCSRFToken = async () => {
+  let token = getCSRFTokenFromCookie();
+  if (!token && !csrfToken) {
+    token = await fetchCSRFToken();
+  }
+  return token || csrfToken;
+};
+
 // Interceptor para agregar el token CSRF a las peticiones
 api.interceptors.request.use(
-  (config) => {
-    const csrfToken = getCSRFToken();
-    if (csrfToken) {
-      config.headers['X-CSRFToken'] = csrfToken;
+  async (config) => {
+    // Solo agregar CSRF token para métodos que lo requieren
+    if (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase())) {
+      const token = await getCSRFToken();
+      if (token) {
+        config.headers['X-CSRFToken'] = token;
+      }
     }
     return config;
   },
