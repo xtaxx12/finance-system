@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 
 const Budgets = () => {
+  const { colors } = useTheme();
   const [currentBudget, setCurrentBudget] = useState(null);
   const [categories, setCategories] = useState([]);
   const [budgetSummary, setBudgetSummary] = useState(null);
@@ -129,337 +131,485 @@ const Budgets = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Cargando presupuestos...</p>
-        </div>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '200px',
+        flexDirection: 'column',
+        gap: '1rem'
+      }}>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          border: `3px solid ${colors.border}`,
+          borderTop: `3px solid ${colors.primary}`,
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite'
+        }} />
+        <p style={{ color: colors.textSecondary }}>Cargando presupuestos...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-          <div className="mb-4 sm:mb-0">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              💰 Presupuestos Mensuales
-            </h1>
-            <p className="text-gray-600 text-lg">
-              Controla tus gastos y mantente dentro de tus límites
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3">
-            {currentBudget && (
-              <button 
-                className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors ${
-                  showCategoryForm 
-                    ? 'bg-red-600 hover:bg-red-700' 
-                    : 'bg-green-600 hover:bg-green-700'
-                }`}
-                onClick={() => setShowCategoryForm(!showCategoryForm)}
-              >
-                <span className="mr-2">{showCategoryForm ? '✕' : '🏷️'}</span>
-                {showCategoryForm ? 'Cancelar' : 'Agregar Categoría'}
-              </button>
-            )}
-            {!currentBudget && (
-              <button 
-                className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors ${
-                  showCreateForm 
-                    ? 'bg-red-600 hover:bg-red-700' 
-                    : 'bg-blue-600 hover:bg-blue-700'
-                }`}
-                onClick={() => setShowCreateForm(!showCreateForm)}
-              >
-                <span className="mr-2">{showCreateForm ? '✕' : '💰'}</span>
-                {showCreateForm ? 'Cancelar' : 'Crear Presupuesto'}
-              </button>
-            )}
-          </div>
+    <div className="container animate-fade-in">
+      {/* Header */}
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        marginBottom: '2rem' 
+      }}>
+        <div>
+          <h1 style={{ 
+            fontSize: '2.5rem', 
+            fontWeight: '700', 
+            color: colors.textPrimary,
+            marginBottom: '0.5rem',
+          }}>
+            💰 Presupuestos Mensuales
+          </h1>
+          <p style={{ 
+            color: colors.textSecondary, 
+            fontSize: '1.125rem',
+            margin: 0 
+          }}>
+            Controla tus gastos y mantente dentro de tus límites
+          </p>
         </div>
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          {currentBudget && (
+            <button 
+              className="modern-btn modern-btn-success"
+              onClick={() => setShowCategoryForm(!showCategoryForm)}
+            >
+              <span>{showCategoryForm ? '✕' : '🏷️'}</span>
+              {showCategoryForm ? 'Cancelar' : 'Agregar Categoría'}
+            </button>
+          )}
+          {!currentBudget && (
+            <button 
+              className="modern-btn modern-btn-primary"
+              onClick={() => setShowCreateForm(!showCreateForm)}
+            >
+              <span>{showCreateForm ? '✕' : '💰'}</span>
+              {showCreateForm ? 'Cancelar' : 'Crear Presupuesto'}
+            </button>
+          )}
+        </div>
+      </div>
 
-        {/* Formulario para crear presupuesto mensual */}
-        {showCreateForm && !currentBudget && (
-          <div className="bg-white shadow rounded-lg p-6 mb-8">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+      {/* Formulario para crear presupuesto mensual */}
+      {showCreateForm && !currentBudget && (
+        <div className="modern-card animate-slide-in">
+          <div className="modern-card-header">
+            <div className="modern-card-title">
+              <span>💰</span>
               Crear Presupuesto para {getCurrentMonth()}
-            </h3>
-            <form onSubmit={handleCreateBudget} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Presupuesto Total Mensual
-                </label>
+            </div>
+          </div>
+          <form onSubmit={handleCreateBudget}>
+            <div className="modern-form-group">
+              <label className="modern-form-label">💵 Presupuesto Total Mensual</label>
+              <input
+                type="number"
+                step="0.01"
+                className="modern-form-control"
+                value={formData.presupuesto_total}
+                onChange={(e) => setFormData({...formData, presupuesto_total: e.target.value})}
+                placeholder="Ej: 15000.00"
+                required
+              />
+              <small style={{ color: colors.textSecondary, fontSize: '0.875rem' }}>
+                Este será tu límite total de gastos para el mes actual
+              </small>
+            </div>
+            <button type="submit" className="modern-btn modern-btn-primary" style={{ width: '100%' }}>
+              <span>💾</span>
+              Crear Presupuesto
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* Formulario para agregar presupuesto de categoría */}
+      {showCategoryForm && currentBudget && (
+        <div className="modern-card animate-slide-in">
+          <div className="modern-card-header">
+            <div className="modern-card-title">
+              <span>🏷️</span>
+              Agregar Presupuesto por Categoría
+            </div>
+          </div>
+          <form onSubmit={handleAddCategoryBudget}>
+            <div className="modern-grid modern-grid-2">
+              <div className="modern-form-group">
+                <label className="modern-form-label">🏷️ Categoría</label>
+                <select
+                  className="modern-form-control"
+                  value={categoryFormData.categoria}
+                  onChange={(e) => setCategoryFormData({...categoryFormData, categoria: e.target.value})}
+                  required
+                >
+                  <option value="">Seleccionar categoría</option>
+                  {categories.filter(cat => 
+                    !currentBudget.category_budgets?.some(cb => cb.categoria === cat.id)
+                  ).map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.nombre}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="modern-form-group">
+                <label className="modern-form-label">💵 Límite Asignado</label>
                 <input
                   type="number"
                   step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={formData.presupuesto_total}
-                  onChange={(e) => setFormData({...formData, presupuesto_total: e.target.value})}
-                  placeholder="Ej: 15000.00"
+                  className="modern-form-control"
+                  value={categoryFormData.limite_asignado}
+                  onChange={(e) => setCategoryFormData({...categoryFormData, limite_asignado: e.target.value})}
+                  placeholder="Ej: 3000.00"
                   required
                 />
-                <p className="mt-1 text-sm text-gray-500">
-                  Este será tu límite total de gastos para el mes actual
-                </p>
               </div>
-              <button 
-                type="submit" 
-                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
-              >
-                Crear Presupuesto
+            </div>
+            <div className="modern-form-group">
+              <label className="modern-form-label">⚠️ Porcentaje de Alerta (%)</label>
+              <input
+                type="number"
+                min="1"
+                max="100"
+                className="modern-form-control"
+                value={categoryFormData.alerta_porcentaje}
+                onChange={(e) => setCategoryFormData({...categoryFormData, alerta_porcentaje: e.target.value})}
+              />
+              <small style={{ color: colors.textSecondary, fontSize: '0.875rem' }}>
+                Te alertaremos cuando alcances este porcentaje del límite
+              </small>
+            </div>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button type="submit" className="modern-btn modern-btn-success" style={{ flex: 1 }}>
+                <span>💾</span>
+                Agregar Presupuesto
               </button>
-            </form>
-          </div>
-        )}
+              <button 
+                type="button"
+                onClick={() => setShowCategoryForm(false)}
+                className="modern-btn modern-btn-secondary"
+                style={{ flex: 1 }}
+              >
+                <span>✕</span>
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
-        {/* Formulario para agregar presupuesto de categoría */}
-        {showCategoryForm && currentBudget && (
-          <div className="bg-white shadow rounded-lg p-6 mb-8">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">
-              Agregar Presupuesto por Categoría
-            </h3>
-            <form onSubmit={handleAddCategoryBudget} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Categoría
-                  </label>
-                  <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    value={categoryFormData.categoria}
-                    onChange={(e) => setCategoryFormData({...categoryFormData, categoria: e.target.value})}
-                    required
-                  >
-                    <option value="">Seleccionar categoría</option>
-                    {categories.filter(cat => 
-                      !currentBudget.category_budgets?.some(cb => cb.categoria === cat.id)
-                    ).map(cat => (
-                      <option key={cat.id} value={cat.id}>{cat.nombre}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Límite Asignado
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    value={categoryFormData.limite_asignado}
-                    onChange={(e) => setCategoryFormData({...categoryFormData, limite_asignado: e.target.value})}
-                    placeholder="Ej: 3000.00"
-                    required
-                  />
+      {/* Resumen del presupuesto actual */}
+      {currentBudget ? (
+        <div>
+          {/* Resumen general */}
+          <div className="modern-card">
+            <div className="modern-card-header">
+              <div className="modern-card-title">
+                <span>📊</span>
+                Resumen de {getCurrentMonth()}
+              </div>
+            </div>
+            
+            <div className="modern-grid modern-grid-3" style={{ marginBottom: '1.5rem' }}>
+              <div className="financial-metric" style={{ '--gradient': colors.primary }}>
+                <div className="financial-metric-icon">💰</div>
+                <div className="financial-metric-label">Presupuesto Total</div>
+                <div className="financial-metric-value">
+                  {formatCurrency(currentBudget.presupuesto_total)}
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Porcentaje de Alerta (%)
-                </label>
-                <input
-                  type="number"
-                  min="1"
-                  max="100"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={categoryFormData.alerta_porcentaje}
-                  onChange={(e) => setCategoryFormData({...categoryFormData, alerta_porcentaje: e.target.value})}
-                />
-                <p className="mt-1 text-sm text-gray-500">
-                  Te alertaremos cuando alcances este porcentaje del límite
-                </p>
-              </div>
-              <div className="flex space-x-3">
-                <button 
-                  type="submit" 
-                  className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors font-medium"
-                >
-                  Agregar Presupuesto
-                </button>
-                <button 
-                  type="button"
-                  onClick={() => setShowCategoryForm(false)}
-                  className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors font-medium"
-                >
-                  Cancelar
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
-
-        {/* Resumen del presupuesto actual */}
-        {currentBudget ? (
-          <div>
-            {/* Resumen general */}
-            <div className="bg-white shadow rounded-lg p-6 mb-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">
-                📊 Resumen de {getCurrentMonth()}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div className="text-center">
-                  <h4 className="text-sm font-medium text-blue-600 mb-2">Presupuesto Total</h4>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {formatCurrency(currentBudget.presupuesto_total)}
-                  </p>
-                </div>
-                <div className="text-center">
-                  <h4 className="text-sm font-medium text-red-600 mb-2">Gastado</h4>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {formatCurrency(currentBudget.gastado_actual)}
-                  </p>
-                </div>
-                <div className="text-center">
-                  <h4 className={`text-sm font-medium mb-2 ${
-                    currentBudget.esta_excedido ? 'text-red-600' : 'text-green-600'
-                  }`}>
-                    {currentBudget.esta_excedido ? 'Excedido' : 'Disponible'}
-                  </h4>
-                  <p className={`text-2xl font-bold ${
-                    currentBudget.esta_excedido ? 'text-red-600' : 'text-green-600'
-                  }`}>
-                    {currentBudget.esta_excedido 
-                      ? formatCurrency(currentBudget.gastado_actual - currentBudget.presupuesto_total)
-                      : formatCurrency(currentBudget.presupuesto_restante || (currentBudget.presupuesto_total - currentBudget.gastado_actual))
-                    }
-                  </p>
+              
+              <div className="financial-metric" style={{ '--gradient': colors.expense }}>
+                <div className="financial-metric-icon">💸</div>
+                <div className="financial-metric-label">Gastado</div>
+                <div className="financial-metric-value">
+                  {formatCurrency(currentBudget.gastado_actual)}
                 </div>
               </div>
-
-              {/* Barra de progreso general */}
-              <div className="mb-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium text-gray-700">Progreso del mes</span>
-                  <span className="text-sm text-gray-600">
-                    {currentBudget.porcentaje_gastado?.toFixed(1) || '0.0'}%
-                  </span>
+              
+              <div className="financial-metric" style={{ 
+                '--gradient': currentBudget.esta_excedido ? colors.expense : colors.income 
+              }}>
+                <div className="financial-metric-icon">
+                  {currentBudget.esta_excedido ? '⚠️' : '✅'}
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-4">
-                  <div
-                    className={`h-4 rounded-full transition-all duration-300 ${
-                      currentBudget.esta_excedido ? 'bg-red-500' : 
-                      (currentBudget.porcentaje_gastado || 0) > 80 ? 'bg-yellow-500' : 'bg-green-500'
-                    }`}
-                    style={{ width: `${Math.min(currentBudget.porcentaje_gastado || 0, 100)}%` }}
-                  ></div>
+                <div className="financial-metric-label">
+                  {currentBudget.esta_excedido ? 'Excedido' : 'Disponible'}
                 </div>
-              </div>
-
-              {/* Información adicional */}
-              <div className="flex flex-col sm:flex-row sm:justify-between text-sm text-gray-600 space-y-1 sm:space-y-0">
-                <span>Días restantes: {currentBudget.dias_restantes_mes || 'N/A'}</span>
-                <span>Presupuesto diario sugerido: {formatCurrency(currentBudget.presupuesto_diario_sugerido || 0)}</span>
+                <div className="financial-metric-value" style={{
+                  color: currentBudget.esta_excedido ? colors.expense : colors.income
+                }}>
+                  {currentBudget.esta_excedido 
+                    ? formatCurrency(currentBudget.gastado_actual - currentBudget.presupuesto_total)
+                    : formatCurrency(currentBudget.presupuesto_restante || (currentBudget.presupuesto_total - currentBudget.gastado_actual))
+                  }
+                </div>
               </div>
             </div>
 
-            {/* Presupuestos por categoría */}
-            {currentBudget.category_budgets && currentBudget.category_budgets.length > 0 && (
-              <div className="bg-white shadow rounded-lg p-6 mb-8">
-                <h3 className="text-xl font-semibold text-gray-900 mb-6">
-                  📋 Presupuestos por Categoría
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {currentBudget.category_budgets.map(categoryBudget => (
-                    <div 
-                      key={categoryBudget.id} 
-                      className="bg-gray-50 rounded-lg p-4 border-l-4"
-                      style={{ borderLeftColor: getStatusColor(categoryBudget.estado) }}
-                    >
-                      <div className="flex justify-between items-center mb-3">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-lg">{getStatusIcon(categoryBudget.estado)}</span>
-                          <h4 className="font-medium text-gray-900">
-                            {categoryBudget.categoria_info?.nombre || categoryBudget.categoria_nombre || 'Categoría'}
-                          </h4>
-                        </div>
-                        <span 
-                          className="text-xs px-2 py-1 rounded-full text-white font-medium"
-                          style={{ backgroundColor: getStatusColor(categoryBudget.estado) }}
-                        >
-                          {(categoryBudget.estado || 'normal').toUpperCase()}
+            {/* Barra de progreso general */}
+            <div style={{ marginBottom: '1rem' }}>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center', 
+                marginBottom: '0.5rem' 
+              }}>
+                <span style={{ 
+                  fontSize: '0.875rem', 
+                  fontWeight: '500', 
+                  color: colors.textPrimary 
+                }}>
+                  Progreso del mes
+                </span>
+                <span style={{ 
+                  fontSize: '0.875rem', 
+                  color: colors.textSecondary 
+                }}>
+                  {(currentBudget.porcentaje_gastado || 0).toFixed(1)}%
+                </span>
+              </div>
+              <div style={{ 
+                width: '100%', 
+                height: '20px', 
+                backgroundColor: colors.border, 
+                borderRadius: '10px',
+                overflow: 'hidden'
+              }}>
+                <div style={{
+                  width: `${Math.min(currentBudget.porcentaje_gastado || 0, 100)}%`,
+                  height: '100%',
+                  background: currentBudget.esta_excedido ? colors.expense : 
+                             (currentBudget.porcentaje_gastado || 0) > 80 ? '#fd7e14' : colors.income,
+                  transition: 'width 0.3s ease'
+                }} />
+              </div>
+            </div>
+
+            {/* Información adicional */}
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              fontSize: '0.875rem', 
+              color: colors.textSecondary,
+              flexWrap: 'wrap',
+              gap: '0.5rem'
+            }}>
+              <span>📅 Días restantes: {currentBudget.dias_restantes_mes || 'N/A'}</span>
+              <span>💡 Presupuesto diario sugerido: {formatCurrency(currentBudget.presupuesto_diario_sugerido || 0)}</span>
+            </div>
+          </div>
+
+          {/* Presupuestos por categoría */}
+          {currentBudget.category_budgets && currentBudget.category_budgets.length > 0 && (
+            <div className="modern-card">
+              <div className="modern-card-header">
+                <div className="modern-card-title">
+                  <span>📋</span>
+                  Presupuestos por Categoría
+                </div>
+                <div style={{
+                  background: `${colors.primary}15`,
+                  color: colors.primary,
+                  padding: '0.5rem 1rem',
+                  borderRadius: '2rem',
+                  fontSize: '0.875rem',
+                  fontWeight: '600'
+                }}>
+                  {currentBudget.category_budgets.length} categorías
+                </div>
+              </div>
+              
+              <div className="modern-grid modern-grid-2">
+                {currentBudget.category_budgets.map(categoryBudget => (
+                  <div 
+                    key={categoryBudget.id} 
+                    style={{
+                      padding: '1.5rem',
+                      background: colors.surfaceHover,
+                      borderRadius: '1rem',
+                      border: `1px solid ${colors.border}`,
+                      borderLeft: `4px solid ${getStatusColor(categoryBudget.estado)}`,
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'translateY(-2px)';
+                      e.target.style.boxShadow = colors.shadowLg;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.boxShadow = 'none';
+                    }}
+                  >
+                    <div style={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center', 
+                      marginBottom: '1rem' 
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span style={{ fontSize: '1.25rem' }}>
+                          {getStatusIcon(categoryBudget.estado)}
                         </span>
+                        <h4 style={{ 
+                          margin: 0, 
+                          fontWeight: '600', 
+                          color: colors.textPrimary 
+                        }}>
+                          {categoryBudget.categoria_info?.nombre || categoryBudget.categoria_nombre || 'Categoría'}
+                        </h4>
                       </div>
+                      <span style={{ 
+                        fontSize: '0.75rem', 
+                        padding: '0.25rem 0.75rem', 
+                        borderRadius: '1rem',
+                        backgroundColor: getStatusColor(categoryBudget.estado),
+                        color: 'white',
+                        fontWeight: '600'
+                      }}>
+                        {(categoryBudget.estado || 'normal').toUpperCase()}
+                      </span>
+                    </div>
 
-                      <div className="mb-3">
-                        <div className="flex justify-between text-sm text-gray-600 mb-2">
-                          <span>Gastado: {formatCurrency(categoryBudget.gastado_actual || 0)}</span>
-                          <span>Límite: {formatCurrency(categoryBudget.limite_asignado || 0)}</span>
-                        </div>
-                        
-                        <div className="w-full bg-gray-200 rounded-full h-3">
-                          <div
-                            className="h-3 rounded-full transition-all duration-300"
-                            style={{ 
-                              width: `${Math.min(categoryBudget.porcentaje_gastado || 0, 100)}%`,
-                              backgroundColor: getStatusColor(categoryBudget.estado)
-                            }}
-                          ></div>
-                        </div>
-                        
-                        <div className="text-center text-xs text-gray-500 mt-1">
-                          {(categoryBudget.porcentaje_gastado || 0).toFixed(1)}% utilizado
-                        </div>
+                    <div style={{ marginBottom: '1rem' }}>
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        fontSize: '0.875rem', 
+                        color: colors.textSecondary,
+                        marginBottom: '0.5rem' 
+                      }}>
+                        <span>💸 Gastado: {formatCurrency(categoryBudget.gastado_actual || 0)}</span>
+                        <span>🎯 Límite: {formatCurrency(categoryBudget.limite_asignado || 0)}</span>
                       </div>
-
-                      <div className="text-xs text-gray-600">
-                        <div>Disponible: {formatCurrency((categoryBudget.limite_asignado || 0) - (categoryBudget.gastado_actual || 0))}</div>
-                        {categoryBudget.esta_excedido && (
-                          <div className="text-red-600 font-bold mt-1">
-                            Excedido por: {formatCurrency((categoryBudget.gastado_actual || 0) - (categoryBudget.limite_asignado || 0))}
-                          </div>
-                        )}
+                      
+                      <div style={{ 
+                        width: '100%', 
+                        height: '12px', 
+                        backgroundColor: colors.border, 
+                        borderRadius: '6px',
+                        overflow: 'hidden'
+                      }}>
+                        <div style={{
+                          width: `${Math.min(categoryBudget.porcentaje_gastado || 0, 100)}%`,
+                          height: '100%',
+                          backgroundColor: getStatusColor(categoryBudget.estado),
+                          transition: 'width 0.3s ease'
+                        }} />
+                      </div>
+                      
+                      <div style={{ 
+                        textAlign: 'center', 
+                        fontSize: '0.75rem', 
+                        color: colors.textSecondary,
+                        marginTop: '0.5rem' 
+                      }}>
+                        {(categoryBudget.porcentaje_gastado || 0).toFixed(1)}% utilizado
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
 
-            {/* Recomendaciones */}
-            {budgetSummary && budgetSummary.recomendaciones && budgetSummary.recomendaciones.length > 0 && (
-              <div className="bg-white shadow rounded-lg p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                  💡 Recomendaciones
-                </h3>
-                <div className="space-y-3">
-                  {budgetSummary.recomendaciones.map((rec, index) => (
-                    <div 
-                      key={index} 
-                      className={`p-4 rounded-lg border-l-4 ${
-                        rec.tipo === 'warning' ? 'bg-yellow-50 border-yellow-400' :
-                        rec.tipo === 'caution' ? 'bg-blue-50 border-blue-400' : 
-                        'bg-green-50 border-green-400'
-                      }`}
-                    >
-                      <h5 className="font-medium text-gray-900 mb-1">{rec.titulo}</h5>
-                      <p className="text-sm text-gray-700">{rec.mensaje}</p>
+                    <div style={{ fontSize: '0.875rem', color: colors.textSecondary }}>
+                      <div style={{ marginBottom: '0.25rem' }}>
+                        💰 Disponible: {formatCurrency((categoryBudget.limite_asignado || 0) - (categoryBudget.gastado_actual || 0))}
+                      </div>
+                      {categoryBudget.esta_excedido && (
+                        <div style={{ 
+                          color: colors.expense, 
+                          fontWeight: 'bold',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.25rem'
+                        }}>
+                          ⚠️ Excedido por: {formatCurrency((categoryBudget.gastado_actual || 0) - (categoryBudget.limite_asignado || 0))}
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Recomendaciones */}
+          {budgetSummary && budgetSummary.recomendaciones && budgetSummary.recomendaciones.length > 0 && (
+            <div className="modern-card">
+              <div className="modern-card-header">
+                <div className="modern-card-title">
+                  <span>💡</span>
+                  Recomendaciones
                 </div>
               </div>
-            )}
-          </div>
-        ) : (
-          <div className="bg-white shadow rounded-lg p-8 text-center">
-            <div className="text-6xl mb-6">💰</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              No tienes presupuesto para este mes
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Crea tu primer presupuesto mensual para empezar a controlar tus gastos
-            </p>
-            <button 
-              className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium"
-              onClick={() => setShowCreateForm(true)}
-            >
-              Crear Presupuesto
-            </button>
-          </div>
-        )}
-      </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {budgetSummary.recomendaciones.map((rec, index) => (
+                  <div 
+                    key={index} 
+                    style={{
+                      padding: '1rem',
+                      borderRadius: '0.75rem',
+                      borderLeft: `4px solid ${
+                        rec.tipo === 'warning' ? '#ffc107' :
+                        rec.tipo === 'caution' ? '#17a2b8' : colors.income
+                      }`,
+                      background: rec.tipo === 'warning' ? '#fff3cd' : 
+                                 rec.tipo === 'caution' ? '#d1ecf1' : `${colors.income}15`
+                    }}
+                  >
+                    <h5 style={{ 
+                      margin: '0 0 0.5rem 0', 
+                      fontWeight: '600', 
+                      color: colors.textPrimary 
+                    }}>
+                      {rec.titulo}
+                    </h5>
+                    <p style={{ 
+                      margin: 0, 
+                      fontSize: '0.875rem', 
+                      color: colors.textSecondary 
+                    }}>
+                      {rec.mensaje}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="modern-card text-center">
+          <div style={{ fontSize: '4rem', marginBottom: '1.5rem', opacity: 0.7 }}>💰</div>
+          <h3 style={{ 
+            fontSize: '1.5rem', 
+            fontWeight: '600', 
+            color: colors.textPrimary, 
+            marginBottom: '0.5rem' 
+          }}>
+            No tienes presupuesto para este mes
+          </h3>
+          <p style={{ 
+            color: colors.textSecondary, 
+            marginBottom: '2rem',
+            fontSize: '1.125rem'
+          }}>
+            Crea tu primer presupuesto mensual para empezar a controlar tus gastos
+          </p>
+          <button 
+            className="modern-btn modern-btn-primary"
+            onClick={() => setShowCreateForm(true)}
+            style={{ fontSize: '1rem', padding: '1rem 2rem' }}
+          >
+            <span>💰</span>
+            Crear Presupuesto
+          </button>
+        </div>
+      )}
     </div>
   );
 };
