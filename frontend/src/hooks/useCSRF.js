@@ -11,7 +11,7 @@ const useCSRF = () => {
           withCredentials: true,
         });
       } catch (error) {
-        console.warn('No se pudo inicializar el token CSRF:', error.message);
+        // Error silenciado al inicializar CSRF
       }
     };
 

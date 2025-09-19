@@ -108,61 +108,74 @@ class MonthlyBudgetViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def summary(self, request):
         """Obtener resumen completo de presupuestos"""
-        today = timezone.now().date()
-        
         try:
-            budget = MonthlyBudget.objects.get(
+            today = timezone.now().date()
+            
+            try:
+                budget = MonthlyBudget.objects.get(
+                    usuario=request.user,
+                    año=today.year,
+                    mes=today.month
+                )
+            except MonthlyBudget.DoesNotExist:
+                return Response({'message': 'No hay presupuesto para este mes'}, 
+                              status=status.HTTP_404_NOT_FOUND)
+            
+            # Actualizar gastos antes de mostrar resumen
+            self.update_budget_spending(budget)
+            
+            # Obtener alertas activas
+            alertas = BudgetAlert.objects.filter(
                 usuario=request.user,
-                año=today.year,
-                mes=today.month
+                activa=True,
+                created_at__month=today.month,
+                created_at__year=today.year
             )
-        except MonthlyBudget.DoesNotExist:
-            return Response({'message': 'No hay presupuesto para este mes'}, 
-                          status=status.HTTP_404_NOT_FOUND)
-        
-        # Actualizar gastos antes de mostrar resumen
-        self.update_budget_spending(budget)
-        
-        # Obtener alertas activas
-        alertas = BudgetAlert.objects.filter(
-            usuario=request.user,
-            activa=True,
-            created_at__month=today.month,
-            created_at__year=today.year
-        )
-        
-        # Estadísticas
-        category_budgets = budget.category_budgets.all()
-        categorias_excedidas = category_budgets.filter(gastado_actual__gt=F('limite_asignado')).count()
-        categorias_en_alerta = category_budgets.filter(
-            gastado_actual__gte=F('limite_asignado') * F('alerta_porcentaje') / 100
-        ).count()
-        
-        # Categoría más gastada
-        categoria_mas_gastada = category_budgets.order_by('-gastado_actual').first()
-        categoria_mas_gastada_data = {}
-        if categoria_mas_gastada:
-            categoria_mas_gastada_data = {
-                'nombre': categoria_mas_gastada.categoria.nombre,
-                'gastado': float(categoria_mas_gastada.gastado_actual),
-                'limite': float(categoria_mas_gastada.limite_asignado),
-                'porcentaje': categoria_mas_gastada.porcentaje_gastado
+            
+            # Estadísticas
+            category_budgets = budget.category_budgets.all()
+            categorias_excedidas = category_budgets.filter(gastado_actual__gt=F('limite_asignado')).count()
+            categorias_en_alerta = category_budgets.filter(
+                gastado_actual__gte=F('limite_asignado') * F('alerta_porcentaje') / 100
+            ).count()
+            
+            # Categoría más gastada
+            categoria_mas_gastada = category_budgets.order_by('-gastado_actual').first()
+            categoria_mas_gastada_data = {}
+            if categoria_mas_gastada:
+                try:
+                    categoria_mas_gastada_data = {
+                        'nombre': categoria_mas_gastada.categoria.nombre,
+                        'gastado': float(categoria_mas_gastada.gastado_actual),
+                        'limite': float(categoria_mas_gastada.limite_asignado),
+                        'porcentaje': categoria_mas_gastada.porcentaje_gastado
+                    }
+                except Exception:
+                    categoria_mas_gastada_data = {}
+            
+            # Recomendaciones
+            try:
+                recomendaciones = self.generate_recommendations(budget)
+            except Exception:
+                recomendaciones = []
+            
+            data = {
+                'presupuesto_mensual': MonthlyBudgetSerializer(budget).data,
+                'alertas_activas': BudgetAlertSerializer(alertas, many=True).data,
+                'categorias_excedidas': categorias_excedidas,
+                'categorias_en_alerta': categorias_en_alerta,
+                'categoria_mas_gastada': categoria_mas_gastada_data,
+                'recomendaciones': recomendaciones
             }
-        
-        # Recomendaciones
-        recomendaciones = self.generate_recommendations(budget)
-        
-        data = {
-            'presupuesto_mensual': MonthlyBudgetSerializer(budget).data,
-            'alertas_activas': BudgetAlertSerializer(alertas, many=True).data,
-            'categorias_excedidas': categorias_excedidas,
-            'categorias_en_alerta': categorias_en_alerta,
-            'categoria_mas_gastada': categoria_mas_gastada_data,
-            'recomendaciones': recomendaciones
-        }
-        
-        serializer = BudgetSummarySerializer(data)
-        return Response(serializer.data)
+            
+            serializer = BudgetSummarySerializer(data)
+            return Response(serializer.data)
+            
+        except Exception as e:
+            return Response(
+                {'error': f'Error interno del servidor: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
     
     def update_budget_spending(self, budget):
         """Actualizar gastos del presupuesto mensual"""
@@ -240,35 +253,51 @@ class MonthlyBudgetViewSet(viewsets.ModelViewSet):
         """Generar recomendaciones basadas en el presupuesto"""
         recomendaciones = []
         
-        # Recomendación general
-        if budget.esta_excedido:
-            recomendaciones.append({
-                'tipo': 'warning',
-                'titulo': 'Presupuesto mensual excedido',
-                'mensaje': f'Has excedido tu presupuesto mensual por {budget.gastado_actual - budget.presupuesto_total:.2f}. Considera revisar tus gastos.'
-            })
-        elif budget.porcentaje_gastado > 80:
-            dias_restantes = budget.dias_restantes_mes
-            recomendaciones.append({
-                'tipo': 'caution',
-                'titulo': 'Presupuesto casi agotado',
-                'mensaje': f'Has gastado {budget.porcentaje_gastado:.1f}% de tu presupuesto. Te quedan {dias_restantes} días del mes.'
-            })
-        
-        # Recomendaciones por categoría
-        for cat_budget in budget.category_budgets.filter(gastado_actual__gt=0).order_by('-porcentaje_gastado')[:3]:
-            if cat_budget.esta_excedido:
+        try:
+            # Recomendación general
+            if hasattr(budget, 'esta_excedido') and budget.esta_excedido:
+                exceso = budget.gastado_actual - budget.presupuesto_total
                 recomendaciones.append({
-                    'tipo': 'category_exceeded',
-                    'titulo': f'{cat_budget.categoria.nombre} excedida',
-                    'mensaje': f'Has excedido el presupuesto de {cat_budget.categoria.nombre} por {cat_budget.gastado_actual - cat_budget.limite_asignado:.2f}'
+                    'tipo': 'warning',
+                    'titulo': 'Presupuesto mensual excedido',
+                    'mensaje': f'Has excedido tu presupuesto mensual por ${exceso:.2f}. Considera revisar tus gastos.'
                 })
-            elif cat_budget.necesita_alerta:
+            elif hasattr(budget, 'porcentaje_gastado') and budget.porcentaje_gastado > 80:
+                dias_restantes = getattr(budget, 'dias_restantes_mes', 0)
                 recomendaciones.append({
-                    'tipo': 'category_warning',
-                    'titulo': f'Cuidado con {cat_budget.categoria.nombre}',
-                    'mensaje': f'Has gastado {cat_budget.porcentaje_gastado:.1f}% del presupuesto en {cat_budget.categoria.nombre}'
+                    'tipo': 'caution',
+                    'titulo': 'Presupuesto casi agotado',
+                    'mensaje': f'Has gastado {budget.porcentaje_gastado:.1f}% de tu presupuesto. Te quedan {dias_restantes} días del mes.'
                 })
+            
+            # Recomendaciones por categoría
+            try:
+                category_budgets = budget.category_budgets.filter(gastado_actual__gt=0).order_by('-porcentaje_gastado')[:3]
+                for cat_budget in category_budgets:
+                    try:
+                        if hasattr(cat_budget, 'esta_excedido') and cat_budget.esta_excedido:
+                            exceso = cat_budget.gastado_actual - cat_budget.limite_asignado
+                            categoria_nombre = getattr(cat_budget.categoria, 'nombre', 'Categoría')
+                            recomendaciones.append({
+                                'tipo': 'category_exceeded',
+                                'titulo': f'{categoria_nombre} excedida',
+                                'mensaje': f'Has excedido el presupuesto de {categoria_nombre} por ${exceso:.2f}'
+                            })
+                        elif hasattr(cat_budget, 'necesita_alerta') and cat_budget.necesita_alerta:
+                            categoria_nombre = getattr(cat_budget.categoria, 'nombre', 'Categoría')
+                            porcentaje = getattr(cat_budget, 'porcentaje_gastado', 0)
+                            recomendaciones.append({
+                                'tipo': 'category_warning',
+                                'titulo': f'Cuidado con {categoria_nombre}',
+                                'mensaje': f'Has gastado {porcentaje:.1f}% del presupuesto en {categoria_nombre}'
+                            })
+                    except Exception:
+                        continue
+            except Exception:
+                pass
+                
+        except Exception:
+            pass
         
         return recomendaciones
 

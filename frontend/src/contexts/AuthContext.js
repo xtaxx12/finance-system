@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
           credentials: 'include'
         });
       } catch (csrfError) {
-        console.log('Error obteniendo CSRF token:', csrfError);
+        // Error silenciado al obtener CSRF token
       }
       setUser(null);
     } finally {
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await api.post('/auth/logout/');
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      // Error silenciado al cerrar sesión
     } finally {
       setUser(null);
     }

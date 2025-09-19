@@ -26,7 +26,7 @@ const NotificationBell = () => {
       const response = await api.get('/notifications/notifications/unread_count/');
       setUnreadCount(response.data.unread_count);
     } catch (error) {
-      console.error('Error fetching unread count:', error);
+      // Error silenciado
     }
   };
 
@@ -35,7 +35,7 @@ const NotificationBell = () => {
       const response = await api.get('/notifications/notifications/recent/');
       setNotifications(response.data);
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      // Error silenciado
     }
   };
 
@@ -45,7 +45,7 @@ const NotificationBell = () => {
       fetchUnreadCount();
       fetchRecentNotifications();
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      // Error silenciado
     }
   };
 

@@ -67,7 +67,7 @@ const Transactions = () => {
         delete data.categoria;
       }
 
-      console.log('Enviando datos:', data); // Para debug
+
       
       await api.post(endpoint, data);
       toast.success(`${activeTab === 'gastos' ? 'Gasto' : 'Ingreso'} agregado exitosamente`);
@@ -82,7 +82,7 @@ const Transactions = () => {
       });
       fetchTransactions();
     } catch (error) {
-      console.error('Error al guardar:', error.response?.data); // Para debug
+      // Error manejado con toast
       toast.error(error.response?.data?.detail || 'Error al guardar transacción');
     }
   };

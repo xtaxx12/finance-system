@@ -42,7 +42,7 @@ const Budget = () => {
         setShowCreateForm(true);
       }
     } catch (error) {
-      console.error('Error cargando presupuesto:', error);
+      // Error manejado con estado
       setError('Error al cargar el presupuesto');
     } finally {
       setLoading(false);
@@ -54,7 +54,7 @@ const Budget = () => {
       const categoriesData = await categoriesApi.getCategories();
       setCategories(categoriesData.results || categoriesData);
     } catch (error) {
-      console.error('Error cargando categorías:', error);
+      // Error silenciado
     }
   };
 
@@ -66,7 +66,7 @@ const Budget = () => {
       setBudgetForm({ presupuesto_total: '', descripcion: '' });
       await loadBudgetData();
     } catch (error) {
-      console.error('Error creando presupuesto:', error);
+      // Error manejado con estado
       setError(error.response?.data?.error || 'Error al crear el presupuesto');
     }
   };
@@ -80,7 +80,7 @@ const Budget = () => {
       setShowCategoryForm(false);
       await loadBudgetData();
     } catch (error) {
-      console.error('Error agregando presupuesto de categoría:', error);
+      // Error manejado con estado
       setError(error.response?.data?.error || 'Error al agregar presupuesto de categoría');
     }
   };

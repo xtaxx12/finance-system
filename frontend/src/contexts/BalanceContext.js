@@ -41,7 +41,7 @@ export const BalanceProvider = ({ children }) => {
       setTotalDebt(debt);
       setAvailableBalance(transactionBalance - debt);
     } catch (error) {
-      console.error('Error al calcular balance:', error);
+      // Error silenciado, usando fallback
       // Fallback al localStorage si falla la API
       const transactions = JSON.parse(localStorage.getItem(`transactions_${user.id}`) || '[]');
       const transactionBalance = transactions.reduce((total, transaction) => {

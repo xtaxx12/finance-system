@@ -148,7 +148,7 @@ const Loans = () => {
       setLoans(response.data.results || response.data);
       updateBalance();
     } catch (error) {
-      console.error('Error al cargar préstamos:', error);
+      // Error manejado con toast
       toast.error('Error al cargar los préstamos');
     }
   };
@@ -180,7 +180,7 @@ const Loans = () => {
       toast.success('Préstamo agregado exitosamente');
       fetchLoans(); // Recargar la lista
     } catch (error) {
-      console.error('Error al crear préstamo:', error);
+      // Error manejado con toast
       toast.error('Error al crear el préstamo');
     }
   };
@@ -205,7 +205,7 @@ const Loans = () => {
       toast.success('Pago registrado exitosamente');
       fetchLoans(); // Recargar la lista
     } catch (error) {
-      console.error('Error al registrar pago:', error);
+      // Error manejado con toast
       toast.error('Error al registrar el pago');
     }
   };
@@ -217,7 +217,7 @@ const Loans = () => {
         toast.success('Préstamo eliminado');
         fetchLoans(); // Recargar la lista
       } catch (error) {
-        console.error('Error al eliminar préstamo:', error);
+        // Error manejado con toast
         toast.error('Error al eliminar el préstamo');
       }
     }
