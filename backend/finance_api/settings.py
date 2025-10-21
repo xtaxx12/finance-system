@@ -37,6 +37,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'cors_middleware.CorsMiddleware',  # Middleware personalizado para CORS
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -135,29 +136,65 @@ CORS_ALLOWED_ORIGINS = [
     "https://finance-frontend-tawny.vercel.app",
 ]
 
-# Para desarrollo y producción, permitir todos los orígenes temporalmente
+# Para desarrollo y producción en Render, permitir todos los orígenes
 if DEBUG or 'RENDER' in os.environ:
     CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        r"^https://.*\.vercel\.app$",
+        r"^https://.*\.onrender\.com$",
+    ]
 else:
     # En producción, ser más específico
     CORS_ALLOWED_ORIGINS.extend([
         "https://finance-frontend-tawny.vercel.app",
-        "https://*.vercel.app",
     ])
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        r"^https://.*\.vercel\.app$",
+    ]
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_HEADERS = True
 CORS_ALLOW_ALL_METHODS = True
+
+# Headers específicos para CORS
+CORS_ALLOWED_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'cache-control',
+    'pragma',
+]
+
+# Métodos HTTP permitidos
+CORS_ALLOWED_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
 
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://finance-frontend-tawny.vercel.app",
-    "https://*.vercel.app",
-    "https://*.railway.app",
-    "https://*.onrender.com",
+    "https://finance-backend-k12z.onrender.com",
 ]
+
+# Agregar patrones dinámicos para subdominios
+if 'RENDER' in os.environ:
+    CSRF_TRUSTED_ORIGINS.extend([
+        "https://*.vercel.app",
+        "https://*.onrender.com",
+    ])
 
 # Configuración específica para Render
 import os
@@ -175,17 +212,9 @@ if 'RENDER' in os.environ:
     # Configuración CORS específica para Render
     CORS_ALLOW_ALL_ORIGINS = True
     CORS_ALLOW_CREDENTIALS = True
-    CORS_ALLOWED_HEADERS = [
-        'accept',
-        'accept-encoding',
-        'authorization',
-        'content-type',
-        'dnt',
-        'origin',
-        'user-agent',
-        'x-csrftoken',
-        'x-requested-with',
-    ]
+    
+    # Configuración adicional para preflight requests
+    CORS_PREFLIGHT_MAX_AGE = 86400
     
     # Configuración de cookies para cross-domain
     SESSION_COOKIE_SAMESITE = 'None'

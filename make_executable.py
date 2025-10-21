@@ -2,12 +2,18 @@
 import os
 import stat
 
-# Hacer build.sh ejecutable
-build_script = 'backend/build.sh'
-if os.path.exists(build_script):
-    # Agregar permisos de ejecución
-    st = os.stat(build_script)
-    os.chmod(build_script, st.st_mode | stat.S_IEXEC)
-    print(f"✅ {build_script} is now executable")
-else:
-    print(f"❌ {build_script} not found")
+# Scripts para hacer ejecutables
+scripts = [
+    'backend/build.sh',
+    'backend/start_render.sh',
+    'backend/health_check.py'
+]
+
+for script in scripts:
+    if os.path.exists(script):
+        # Agregar permisos de ejecución
+        st = os.stat(script)
+        os.chmod(script, st.st_mode | stat.S_IEXEC)
+        print(f"✅ {script} is now executable")
+    else:
+        print(f"❌ {script} not found")
