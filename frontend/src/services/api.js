@@ -10,17 +10,19 @@ const api = axios.create({
 
 // Variable para almacenar el token CSRF
 let csrfToken = null;
+let csrfTokenPromise = null;
 
 // Función para obtener el token CSRF del servidor
 const fetchCSRFToken = async () => {
   try {
-    const response = await axios.get(`${api.defaults.baseURL.replace('/api', '')}/api/auth/csrf/`, {
+    const baseURL = api.defaults.baseURL.replace('/api', '');
+    const response = await axios.get(`${baseURL}/api/auth/csrf/`, {
       withCredentials: true,
     });
     csrfToken = response.data.csrfToken;
     return csrfToken;
   } catch (error) {
-    // Error silenciado al obtener CSRF token
+    console.error('Error obteniendo CSRF token:', error);
     return null;
   }
 };
@@ -31,7 +33,7 @@ const getCSRFTokenFromCookie = () => {
   for (let cookie of cookies) {
     const [name, value] = cookie.trim().split('=');
     if (name === 'csrftoken') {
-      return value;
+      return decodeURIComponent(value);
     }
   }
   return null;
@@ -39,10 +41,20 @@ const getCSRFTokenFromCookie = () => {
 
 // Función para obtener el token CSRF (primero de cookie, luego del servidor)
 const getCSRFToken = async () => {
+  // Primero intentar obtener de la cookie
   let token = getCSRFTokenFromCookie();
-  if (!token && !csrfToken) {
-    token = await fetchCSRFToken();
+  if (token) {
+    return token;
   }
+
+  // Si no hay token en cookie y no hay una petición en curso, obtenerlo del servidor
+  if (!csrfTokenPromise) {
+    csrfTokenPromise = fetchCSRFToken().finally(() => {
+      csrfTokenPromise = null;
+    });
+  }
+
+  token = await csrfTokenPromise;
   return token || csrfToken;
 };
 

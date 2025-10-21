@@ -115,7 +115,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Django REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
+        'apps.users.authentication.CsrfExemptSessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -127,12 +127,6 @@ REST_FRAMEWORK = {
         'rest_framework.filters.OrderingFilter',
     ],
 }
-
-# Para desarrollo, usar autenticación sin CSRF
-if DEBUG:
-    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = [
-        'apps.users.authentication.CsrfExemptSessionAuthentication',
-    ]
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
@@ -203,7 +197,7 @@ if 'RENDER' in os.environ:
     
     # Configuración adicional para sesiones
     SESSION_COOKIE_HTTPONLY = True
-    CSRF_COOKIE_HTTPONLY = False
+    CSRF_COOKIE_HTTPONLY = False  # Importante: debe ser False para que JS pueda leerlo
     
     # Configuración adicional para cookies cross-domain
     CSRF_TRUSTED_ORIGINS = [
@@ -211,6 +205,10 @@ if 'RENDER' in os.environ:
         "https://*.vercel.app",
         "https://*.onrender.com",
     ]
+    
+    # IMPORTANTE: Configurar el nombre de la cookie CSRF
+    CSRF_COOKIE_NAME = 'csrftoken'
+    CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
     
     # Usar SQLite si hay problemas con PostgreSQL
     if os.environ.get('USE_SQLITE'):

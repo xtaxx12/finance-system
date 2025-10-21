@@ -50,6 +50,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (credentials) => {
+    // Primero obtener el token CSRF
+    try {
+      await api.get('/auth/csrf/');
+    } catch (error) {
+      console.log('Error obteniendo CSRF token, continuando...');
+    }
+    
+    // Luego hacer login
     const response = await api.post('/auth/login/', credentials);
     setUser(response.data.user);
     return response.data;
