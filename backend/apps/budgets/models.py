@@ -21,6 +21,10 @@ class MonthlyBudget(models.Model):
         verbose_name_plural = 'Presupuestos Mensuales'
         unique_together = ['usuario', 'año', 'mes']
         ordering = ['-año', '-mes']
+        indexes = [
+            models.Index(fields=['usuario', '-año', '-mes']),
+            models.Index(fields=['usuario', 'activo']),
+        ]
     
     def __str__(self):
         return f"Presupuesto {self.mes}/{self.año} - {self.usuario.username}"
@@ -76,6 +80,9 @@ class CategoryBudget(models.Model):
         verbose_name_plural = 'Presupuestos por Categoría'
         unique_together = ['presupuesto_mensual', 'categoria']
         ordering = ['categoria__nombre']
+        indexes = [
+            models.Index(fields=['presupuesto_mensual', 'categoria']),
+        ]
     
     def __str__(self):
         return f"{self.categoria.nombre} - {self.presupuesto_mensual}"
@@ -133,6 +140,10 @@ class BudgetAlert(models.Model):
         verbose_name = 'Alerta de Presupuesto'
         verbose_name_plural = 'Alertas de Presupuesto'
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['usuario', 'activa', '-created_at']),
+            models.Index(fields=['usuario', '-created_at']),
+        ]
     
     def __str__(self):
         return f"Alerta {self.tipo} - {self.usuario.username}"

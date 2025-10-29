@@ -11,7 +11,10 @@ class NotificationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        return Notification.objects.filter(usuario=self.request.user)
+        """Optimize queryset with proper ordering"""
+        return Notification.objects.filter(
+            usuario=self.request.user
+        ).order_by('-created_at')
     
     @action(detail=False, methods=['get'])
     def unread_count(self, request):

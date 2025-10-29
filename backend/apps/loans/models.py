@@ -28,6 +28,10 @@ class Loan(models.Model):
         verbose_name = 'Préstamo'
         verbose_name_plural = 'Préstamos'
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['user', '-created_at']),
+            models.Index(fields=['user', 'date']),
+        ]
     
     def __str__(self):
         return f"{self.name} - ${self.amount}"
@@ -37,20 +41,34 @@ class Loan(models.Model):
         """Calcula el monto por cuota"""
         return self.amount / self.installments
     
+    def get_total_paid(self):
+        """Calcula el total pagado hasta ahora"""
+        # Use annotated value if available, otherwise calculate
+        if hasattr(self, '_total_paid'):
+            return self._total_paid or Decimal('0')
+        return self.payments.aggregate(total=models.Sum('amount'))['total'] or Decimal('0')
+    
     @property
     def total_paid(self):
         """Calcula el total pagado hasta ahora"""
-        return sum(payment.amount for payment in self.payments.all())
+        return self.get_total_paid()
     
     @property
     def remaining_amount(self):
         """Calcula el monto restante por pagar"""
         return max(Decimal('0'), self.amount - self.total_paid)
     
+    def get_paid_installments(self):
+        """Cuenta las cuotas pagadas"""
+        # Use annotated value if available, otherwise calculate
+        if hasattr(self, '_paid_installments'):
+            return self._paid_installments or 0
+        return self.payments.count()
+    
     @property
     def paid_installments(self):
         """Cuenta las cuotas pagadas"""
-        return self.payments.count()
+        return self.get_paid_installments()
     
     @property
     def progress_percentage(self):
@@ -83,6 +101,10 @@ class LoanPayment(models.Model):
         verbose_name = 'Pago de préstamo'
         verbose_name_plural = 'Pagos de préstamos'
         ordering = ['-date', '-created_at']
+        indexes = [
+            models.Index(fields=['loan', '-date']),
+            models.Index(fields=['date']),
+        ]
     
     def __str__(self):
         return f"Pago de ${self.amount} para {self.loan.name}"

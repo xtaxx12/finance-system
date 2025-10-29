@@ -207,26 +207,58 @@ class ExpenseViewSet(viewsets.ModelViewSet):
             total=Sum('monto')
         ).order_by('-total')
         
-        # Evolución de los últimos 6 meses
+        # Evolución de los últimos 6 meses - optimized with single query
         evolucion_mensual = []
+        
+        # Calculate date range for last 6 months
+        end_date = timezone.now().date()
+        start_date = end_date.replace(day=1)
+        for i in range(5, -1, -1):
+            # Calculate start of month going backwards
+            month_offset = i
+            year_offset = month_offset // 12
+            month_num = start_date.month - (month_offset % 12)
+            year_num = start_date.year - year_offset
+            
+            if month_num <= 0:
+                month_num += 12
+                year_num -= 1
+        
+        # Get all transactions for the last 6 months in two queries
+        six_months_ago = datetime(year_num, month_num, 1).date()
+        
+        ingresos_data = Income.objects.filter(
+            usuario=user,
+            fecha__gte=six_months_ago,
+            fecha__lte=end_date
+        ).values(
+            'fecha__year', 'fecha__month'
+        ).annotate(
+            total=Sum('monto')
+        ).order_by('fecha__year', 'fecha__month')
+        
+        gastos_data = Expense.objects.filter(
+            usuario=user,
+            fecha__gte=six_months_ago,
+            fecha__lte=end_date
+        ).values(
+            'fecha__year', 'fecha__month'
+        ).annotate(
+            total=Sum('monto')
+        ).order_by('fecha__year', 'fecha__month')
+        
+        # Convert to dictionaries for fast lookup
+        ingresos_dict = {(item['fecha__year'], item['fecha__month']): item['total'] for item in ingresos_data}
+        gastos_dict = {(item['fecha__year'], item['fecha__month']): item['total'] for item in gastos_data}
+        
+        # Build the evolution list
         for i in range(5, -1, -1):
             fecha_mes = timezone.now().date().replace(day=1) - timedelta(days=i*30)
             mes_num = fecha_mes.month
             año_num = fecha_mes.year
             
-            inicio = datetime(año_num, mes_num, 1).date()
-            if mes_num == 12:
-                fin = datetime(año_num + 1, 1, 1).date() - timedelta(days=1)
-            else:
-                fin = datetime(año_num, mes_num + 1, 1).date() - timedelta(days=1)
-            
-            ingresos = Income.objects.filter(
-                usuario=user, fecha__range=[inicio, fin]
-            ).aggregate(total=Sum('monto'))['total'] or 0
-            
-            gastos = Expense.objects.filter(
-                usuario=user, fecha__range=[inicio, fin]
-            ).aggregate(total=Sum('monto'))['total'] or 0
+            ingresos = ingresos_dict.get((año_num, mes_num), 0)
+            gastos = gastos_dict.get((año_num, mes_num), 0)
             
             evolucion_mensual.append({
                 'mes': calendar.month_name[mes_num],
