@@ -18,6 +18,11 @@ class SavingGoal(models.Model):
         verbose_name = 'Meta de Ahorro'
         verbose_name_plural = 'Metas de Ahorro'
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['usuario', 'completada', '-created_at']),
+            models.Index(fields=['usuario', '-created_at']),
+            models.Index(fields=['usuario', 'fecha_limite']),
+        ]
 
     def __str__(self):
         return f"{self.nombre} - ${self.monto_objetivo}"

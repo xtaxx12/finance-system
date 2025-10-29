@@ -16,6 +16,11 @@ class Income(models.Model):
         verbose_name = 'Ingreso'
         verbose_name_plural = 'Ingresos'
         ordering = ['-fecha']
+        indexes = [
+            models.Index(fields=['usuario', '-fecha']),
+            models.Index(fields=['usuario', 'fecha']),
+            models.Index(fields=['fecha']),
+        ]
 
     def __str__(self):
         return f"{self.descripcion} - ${self.monto}"
@@ -35,6 +40,12 @@ class Expense(models.Model):
         verbose_name = 'Gasto'
         verbose_name_plural = 'Gastos'
         ordering = ['-fecha']
+        indexes = [
+            models.Index(fields=['usuario', '-fecha']),
+            models.Index(fields=['usuario', 'fecha']),
+            models.Index(fields=['usuario', 'categoria', 'fecha']),
+            models.Index(fields=['fecha']),
+        ]
 
     def __str__(self):
         return f"{self.descripcion} - ${self.monto}"

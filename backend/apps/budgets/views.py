@@ -19,7 +19,12 @@ class MonthlyBudgetViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        return MonthlyBudget.objects.filter(usuario=self.request.user)
+        """Optimize queryset with prefetch_related to avoid N+1 queries"""
+        return MonthlyBudget.objects.filter(
+            usuario=self.request.user
+        ).prefetch_related(
+            'category_budgets__categoria'
+        )
     
     @action(detail=False, methods=['get'])
     def current_month(self, request):
@@ -197,9 +202,28 @@ class MonthlyBudgetViewSet(viewsets.ModelViewSet):
         budget.gastado_actual = total_gastado
         budget.save()
         
-        # Actualizar gastos por categoría
-        for category_budget in budget.category_budgets.all():
-            self.update_category_spending(category_budget)
+        # Actualizar gastos por categoría - optimized with single query
+        category_budgets = budget.category_budgets.select_related('categoria').all()
+        
+        # Get all expenses grouped by category in one query
+        gastos_por_categoria = Expense.objects.filter(
+            usuario=budget.usuario,
+            fecha__range=[inicio_mes, fin_mes]
+        ).values('categoria').annotate(
+            total=Sum('monto')
+        )
+        
+        # Create a dictionary for fast lookup
+        gastos_dict = {item['categoria']: item['total'] for item in gastos_por_categoria}
+        
+        # Update all category budgets
+        for category_budget in category_budgets:
+            gasto_categoria = gastos_dict.get(category_budget.categoria.id, Decimal('0'))
+            category_budget.gastado_actual = gasto_categoria
+            category_budget.save()
+            
+            # Verificar alertas
+            self.check_category_alerts(category_budget)
     
     def update_category_spending(self, category_budget):
         """Actualizar gastos de una categoría específica"""
@@ -270,9 +294,11 @@ class MonthlyBudgetViewSet(viewsets.ModelViewSet):
                     'mensaje': f'Has gastado {budget.porcentaje_gastado:.1f}% de tu presupuesto. Te quedan {dias_restantes} días del mes.'
                 })
             
-            # Recomendaciones por categoría
+            # Recomendaciones por categoría - optimized query
             try:
-                category_budgets = budget.category_budgets.filter(gastado_actual__gt=0).order_by('-porcentaje_gastado')[:3]
+                category_budgets = budget.category_budgets.select_related('categoria').filter(
+                    gastado_actual__gt=0
+                ).order_by('-porcentaje_gastado')[:3]
                 for cat_budget in category_budgets:
                     try:
                         if hasattr(cat_budget, 'esta_excedido') and cat_budget.esta_excedido:
@@ -306,9 +332,10 @@ class CategoryBudgetViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
+        """Optimize queryset with select_related to avoid N+1 queries"""
         return CategoryBudget.objects.filter(
             presupuesto_mensual__usuario=self.request.user
-        )
+        ).select_related('categoria', 'presupuesto_mensual')
 
 class BudgetAlertViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = BudgetAlertSerializer

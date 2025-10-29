@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, Count
 from decimal import Decimal
 from .models import Loan, LoanPayment
 from .serializers import LoanSerializer, LoanPaymentSerializer, LoanPaymentCreateSerializer
@@ -13,21 +13,31 @@ class LoanViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        return Loan.objects.filter(user=self.request.user).prefetch_related('payments')
+        """Optimize queryset with annotations to avoid N+1 queries"""
+        return Loan.objects.filter(user=self.request.user).prefetch_related('payments').annotate(
+            _total_paid=Sum('payments__amount'),
+            _paid_installments=Count('payments')
+        )
     
     @action(detail=False, methods=['get'])
     def summary(self, request):
         """Obtiene un resumen de todos los préstamos del usuario"""
         loans = self.get_queryset()
         
-        total_debt = Decimal('0')
-        total_paid = Decimal('0')
+        # Use aggregation for better performance
+        aggregate_data = loans.aggregate(
+            total_debt=Sum('amount'),
+            total_paid=Sum('payments__amount')
+        )
+        
+        total_debt = aggregate_data['total_debt'] or Decimal('0')
+        total_paid = aggregate_data['total_paid'] or Decimal('0')
+        
+        # Count active and completed loans efficiently
         active_loans = 0
         completed_loans = 0
         
         for loan in loans:
-            total_debt += loan.amount
-            total_paid += loan.total_paid
             if loan.is_completed:
                 completed_loans += 1
             else:
