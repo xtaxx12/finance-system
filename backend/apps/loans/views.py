@@ -24,26 +24,23 @@ class LoanViewSet(viewsets.ModelViewSet):
         """Obtiene un resumen de todos los préstamos del usuario"""
         loans = self.get_queryset()
         
-        # Use aggregation for better performance
-        aggregate_data = loans.aggregate(
-            total_debt=Sum('amount'),
-            total_paid=Sum('payments__amount')
-        )
-        
-        total_debt = aggregate_data['total_debt'] or Decimal('0')
-        total_paid = aggregate_data['total_paid'] or Decimal('0')
-        
-        # Count active and completed loans efficiently
+        # Calculate totals correctly by iterating through loans
+        total_debt = Decimal('0')
+        total_paid = Decimal('0')
+        remaining_debt = Decimal('0')
         active_loans = 0
         completed_loans = 0
         
         for loan in loans:
+            total_debt += loan.amount
+            paid_amount = loan.total_paid
+            total_paid += paid_amount
+            remaining_debt += (loan.amount - paid_amount)
+            
             if loan.is_completed:
                 completed_loans += 1
             else:
                 active_loans += 1
-        
-        remaining_debt = total_debt - total_paid
         
         return Response({
             'total_loans': loans.count(),

@@ -37,10 +37,14 @@ export const BalanceProvider = ({ children }) => {
       const loansResponse = await loansApi.getLoansSummary();
       const debt = loansResponse.data.remaining_debt || 0;
 
+      console.log('📊 Balance Context - API Response:', loansResponse.data);
+      console.log('💰 Deuda pendiente desde API:', debt);
+
       setBalance(transactionBalance);
       setTotalDebt(debt);
       setAvailableBalance(transactionBalance - debt);
     } catch (error) {
+      console.error('❌ Error al obtener datos de préstamos:', error);
       // Error silenciado, usando fallback
       // Fallback al localStorage si falla la API
       const transactions = JSON.parse(localStorage.getItem(`transactions_${user.id}`) || '[]');
@@ -51,11 +55,16 @@ export const BalanceProvider = ({ children }) => {
       }, 0);
 
       const loans = JSON.parse(localStorage.getItem(`loans_${user.id}`) || '[]');
+      console.log('⚠️ Usando fallback - Préstamos desde localStorage:', loans);
+      
       const debt = loans.reduce((total, loan) => {
         const totalPaid = loan.payments?.reduce((sum, payment) => sum + payment.amount, 0) || 0;
         const remaining = loan.amount - totalPaid;
+        console.log(`  Préstamo: ${loan.name}, Monto: ${loan.amount}, Pagado: ${totalPaid}, Restante: ${remaining}`);
         return total + Math.max(0, remaining);
       }, 0);
+
+      console.log('💰 Deuda pendiente desde localStorage:', debt);
 
       setBalance(transactionBalance);
       setTotalDebt(debt);
