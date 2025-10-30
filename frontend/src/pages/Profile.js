@@ -55,7 +55,7 @@ const Profile = () => {
     setLoading(true);
 
     try {
-      const response = await api.put('/users/profile/update/', profileData);
+      const response = await api.put('/auth/profile/update/', profileData);
       updateUser(response.data.user);
       toast.success('Perfil actualizado exitosamente');
     } catch (error) {
@@ -81,7 +81,7 @@ const Profile = () => {
     setLoading(true);
 
     try {
-      await api.post('/users/profile/change-password/', {
+      await api.post('/auth/profile/change-password/', {
         old_password: passwordData.old_password,
         new_password: passwordData.new_password
       });
