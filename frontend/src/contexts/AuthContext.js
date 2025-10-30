@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await api.get('/auth/csrf/');
     } catch (error) {
-      console.log('Error obteniendo CSRF token, continuando...');
+      
     }
     
     // Luego hacer login
