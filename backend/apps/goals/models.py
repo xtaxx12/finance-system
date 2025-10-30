@@ -2,8 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import date
 from decimal import Decimal
+from apps.common.mixins import ProgressMixin
 
-class SavingGoal(models.Model):
+class SavingGoal(models.Model, ProgressMixin):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='metas_ahorro')
     nombre = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True)
@@ -29,13 +30,11 @@ class SavingGoal(models.Model):
 
     @property
     def porcentaje_completado(self):
-        if self.monto_objetivo > 0:
-            return min(float((self.monto_actual / self.monto_objetivo) * 100), 100)
-        return 0
+        return self.get_progress_percentage(self.monto_actual, self.monto_objetivo)
 
     @property
     def monto_faltante(self):
-        return max(self.monto_objetivo - self.monto_actual, 0)
+        return self.get_remaining_amount(self.monto_actual, self.monto_objetivo)
 
     @property
     def dias_restantes(self):

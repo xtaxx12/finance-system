@@ -7,6 +7,8 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 from .models import Income, Expense
 from .serializers import IncomeSerializer, ExpenseSerializer, DashboardSerializer
+from apps.common.date_utils import get_month_date_range
+from apps.common.budget_utils import calculate_budget_spending
 import calendar
 
 class IncomeViewSet(viewsets.ModelViewSet):
@@ -103,16 +105,11 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     
     def recalculate_monthly_budget(self, monthly_budget):
         """Recalcular gastos totales del presupuesto mensual"""
-        inicio_mes = datetime(monthly_budget.año, monthly_budget.mes, 1).date()
-        if monthly_budget.mes == 12:
-            fin_mes = datetime(monthly_budget.año + 1, 1, 1).date() - timedelta(days=1)
-        else:
-            fin_mes = datetime(monthly_budget.año, monthly_budget.mes + 1, 1).date() - timedelta(days=1)
-        
-        total_gastado = Expense.objects.filter(
-            usuario=monthly_budget.usuario,
-            fecha__range=[inicio_mes, fin_mes]
-        ).aggregate(total=Sum('monto'))['total'] or 0
+        total_gastado = calculate_budget_spending(
+            monthly_budget.usuario,
+            monthly_budget.año,
+            monthly_budget.mes
+        )
         
         monthly_budget.gastado_actual = total_gastado
         monthly_budget.save()
@@ -120,17 +117,13 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     def recalculate_category_budget(self, category_budget):
         """Recalcular gastos de una categoría específica"""
         monthly_budget = category_budget.presupuesto_mensual
-        inicio_mes = datetime(monthly_budget.año, monthly_budget.mes, 1).date()
-        if monthly_budget.mes == 12:
-            fin_mes = datetime(monthly_budget.año + 1, 1, 1).date() - timedelta(days=1)
-        else:
-            fin_mes = datetime(monthly_budget.año, monthly_budget.mes + 1, 1).date() - timedelta(days=1)
         
-        gasto_categoria = Expense.objects.filter(
-            usuario=monthly_budget.usuario,
-            categoria=category_budget.categoria,
-            fecha__range=[inicio_mes, fin_mes]
-        ).aggregate(total=Sum('monto'))['total'] or 0
+        gasto_categoria = calculate_budget_spending(
+            monthly_budget.usuario,
+            monthly_budget.año,
+            monthly_budget.mes,
+            categoria=category_budget.categoria
+        )
         
         category_budget.gastado_actual = gasto_categoria
         category_budget.save()
@@ -177,11 +170,7 @@ class ExpenseViewSet(viewsets.ModelViewSet):
         año = int(request.query_params.get('año', timezone.now().year))
         
         # Filtros de fecha para el mes actual
-        inicio_mes = datetime(año, mes, 1).date()
-        if mes == 12:
-            fin_mes = datetime(año + 1, 1, 1).date() - timedelta(days=1)
-        else:
-            fin_mes = datetime(año, mes + 1, 1).date() - timedelta(days=1)
+        inicio_mes, fin_mes = get_month_date_range(año, mes)
         
         # Calcular totales del mes
         ingresos_mes = Income.objects.filter(

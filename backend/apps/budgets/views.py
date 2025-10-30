@@ -13,6 +13,8 @@ from .serializers import (
 )
 from apps.transactions.models import Expense
 from apps.categories.models import Category
+from apps.common.date_utils import get_month_date_range
+from apps.common.budget_utils import calculate_budget_spending, check_budget_alert_needed
 
 class MonthlyBudgetViewSet(viewsets.ModelViewSet):
     serializer_class = MonthlyBudgetSerializer
@@ -184,20 +186,12 @@ class MonthlyBudgetViewSet(viewsets.ModelViewSet):
     
     def update_budget_spending(self, budget):
         """Actualizar gastos del presupuesto mensual"""
-        from datetime import datetime, timedelta
-        
-        # Rango de fechas del mes
-        inicio_mes = datetime(budget.año, budget.mes, 1).date()
-        if budget.mes == 12:
-            fin_mes = datetime(budget.año + 1, 1, 1).date() - timedelta(days=1)
-        else:
-            fin_mes = datetime(budget.año, budget.mes + 1, 1).date() - timedelta(days=1)
-        
         # Calcular gasto total del mes
-        total_gastado = Expense.objects.filter(
-            usuario=budget.usuario,
-            fecha__range=[inicio_mes, fin_mes]
-        ).aggregate(total=Sum('monto'))['total'] or Decimal('0')
+        total_gastado = calculate_budget_spending(
+            budget.usuario,
+            budget.año,
+            budget.mes
+        )
         
         budget.gastado_actual = total_gastado
         budget.save()
@@ -206,9 +200,10 @@ class MonthlyBudgetViewSet(viewsets.ModelViewSet):
         category_budgets = budget.category_budgets.select_related('categoria').all()
         
         # Get all expenses grouped by category in one query
+        start_date, end_date = get_month_date_range(budget.año, budget.mes)
         gastos_por_categoria = Expense.objects.filter(
             usuario=budget.usuario,
-            fecha__range=[inicio_mes, fin_mes]
+            fecha__range=[start_date, end_date]
         ).values('categoria').annotate(
             total=Sum('monto')
         )
@@ -227,21 +222,15 @@ class MonthlyBudgetViewSet(viewsets.ModelViewSet):
     
     def update_category_spending(self, category_budget):
         """Actualizar gastos de una categoría específica"""
-        from datetime import datetime, timedelta
-        
         budget = category_budget.presupuesto_mensual
-        inicio_mes = datetime(budget.año, budget.mes, 1).date()
-        if budget.mes == 12:
-            fin_mes = datetime(budget.año + 1, 1, 1).date() - timedelta(days=1)
-        else:
-            fin_mes = datetime(budget.año, budget.mes + 1, 1).date() - timedelta(days=1)
         
         # Calcular gasto de la categoría
-        gasto_categoria = Expense.objects.filter(
-            usuario=budget.usuario,
-            categoria=category_budget.categoria,
-            fecha__range=[inicio_mes, fin_mes]
-        ).aggregate(total=Sum('monto'))['total'] or Decimal('0')
+        gasto_categoria = calculate_budget_spending(
+            budget.usuario,
+            budget.año,
+            budget.mes,
+            categoria=category_budget.categoria
+        )
         
         category_budget.gastado_actual = gasto_categoria
         category_budget.save()
@@ -251,7 +240,13 @@ class MonthlyBudgetViewSet(viewsets.ModelViewSet):
     
     def check_category_alerts(self, category_budget):
         """Verificar y crear alertas para categoría"""
-        if category_budget.necesita_alerta:
+        needs_alert = check_budget_alert_needed(
+            category_budget.gastado_actual,
+            category_budget.limite_asignado,
+            category_budget.alerta_porcentaje
+        )
+        
+        if needs_alert:
             # Verificar si ya existe una alerta reciente
             existing_alert = BudgetAlert.objects.filter(
                 usuario=category_budget.presupuesto_mensual.usuario,
