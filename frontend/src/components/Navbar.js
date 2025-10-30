@@ -307,10 +307,22 @@ const Navbar = () => {
               <NotificationBell />
               <ThemeToggle />
               
-              <div style={userInfoStyle}>
-                <span style={{ fontSize: '1.25rem' }}>👤</span>
-                Hola, {user.first_name || user.username}
-              </div>
+              <Link 
+                to="/profile"
+                style={window.location.pathname === '/profile' ? activeLinkStyle : linkStyle}
+                onMouseEnter={(e) => {
+                  if (window.location.pathname !== '/profile') {
+                    e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (window.location.pathname !== '/profile') {
+                    e.target.style.background = window.location.pathname === '/profile' ? 'rgba(255, 255, 255, 0.1)' : 'transparent';
+                  }
+                }}
+              >
+                👤 {user.first_name || user.username}
+              </Link>
               
               <button 
                 onClick={handleLogout}
@@ -382,14 +394,20 @@ const Navbar = () => {
                 <ThemeToggle />
               </div>
               
-              <div style={{
-                ...userInfoStyle,
-                justifyContent: 'center',
-                marginBottom: '1rem'
-              }}>
-                <span style={{ fontSize: '1.25rem' }}>👤</span>
-                Hola, {user.first_name || user.username}
-              </div>
+              <Link 
+                to="/profile"
+                style={{
+                  ...linkStyle,
+                  display: 'block',
+                  width: '100%',
+                  textAlign: 'center',
+                  marginBottom: '0.5rem',
+                  background: window.location.pathname === '/profile' ? 'rgba(255, 255, 255, 0.1)' : 'transparent'
+                }}
+                onClick={closeMobileMenu}
+              >
+                👤 Mi Perfil
+              </Link>
               
               <button 
                 onClick={() => {

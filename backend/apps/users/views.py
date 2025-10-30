@@ -59,8 +59,44 @@ def update_profile_view(request):
     serializer = UserSerializer(request.user, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data)
+        return Response({
+            'user': serializer.data,
+            'message': 'Perfil actualizado exitosamente'
+        })
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_password_view(request):
+    """Cambiar contraseña del usuario"""
+    user = request.user
+    old_password = request.data.get('old_password')
+    new_password = request.data.get('new_password')
+    
+    if not old_password or not new_password:
+        return Response({
+            'error': 'Se requieren la contraseña actual y la nueva contraseña'
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Verificar contraseña actual
+    if not user.check_password(old_password):
+        return Response({
+            'error': 'La contraseña actual es incorrecta'
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Validar nueva contraseña
+    if len(new_password) < 8:
+        return Response({
+            'error': 'La nueva contraseña debe tener al menos 8 caracteres'
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Cambiar contraseña
+    user.set_password(new_password)
+    user.save()
+    
+    return Response({
+        'message': 'Contraseña cambiada exitosamente'
+    })
 
 @api_view(['GET'])
 @permission_classes([AllowAny])

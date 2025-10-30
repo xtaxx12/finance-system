@@ -14,6 +14,7 @@ import Transactions from './pages/Transactions';
 import Goals from './pages/Goals';
 import Budgets from './pages/Budgets';
 import Loans from './pages/Loans';
+import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import useCSRF from './hooks/useCSRF';
 
@@ -56,6 +57,11 @@ function App() {
                 <Route path="/loans" element={
                   <ProtectedRoute>
                     <Loans />
+                  </ProtectedRoute>
+                } />
+                <Route path="/profile" element={
+                  <ProtectedRoute>
+                    <Profile />
                   </ProtectedRoute>
                 } />
               </Routes>
