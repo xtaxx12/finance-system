@@ -4,8 +4,9 @@ from apps.categories.models import Category
 from decimal import Decimal
 from django.utils import timezone
 from datetime import datetime
+from apps.common.mixins import ProgressMixin
 
-class MonthlyBudget(models.Model):
+class MonthlyBudget(models.Model, ProgressMixin):
     """Presupuesto mensual general del usuario"""
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='monthly_budgets')
     año = models.IntegerField()
@@ -31,13 +32,11 @@ class MonthlyBudget(models.Model):
     
     @property
     def porcentaje_gastado(self):
-        if self.presupuesto_total > 0:
-            return min((self.gastado_actual / self.presupuesto_total) * 100, 100)
-        return 0
+        return self.get_progress_percentage(self.gastado_actual, self.presupuesto_total)
     
     @property
     def presupuesto_restante(self):
-        return max(self.presupuesto_total - self.gastado_actual, 0)
+        return self.get_remaining_amount(self.gastado_actual, self.presupuesto_total)
     
     @property
     def esta_excedido(self):
@@ -65,7 +64,7 @@ class MonthlyBudget(models.Model):
             return self.presupuesto_restante / dias_restantes
         return 0
 
-class CategoryBudget(models.Model):
+class CategoryBudget(models.Model, ProgressMixin):
     """Presupuesto por categoría dentro de un presupuesto mensual"""
     presupuesto_mensual = models.ForeignKey(MonthlyBudget, on_delete=models.CASCADE, related_name='category_budgets')
     categoria = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -89,13 +88,11 @@ class CategoryBudget(models.Model):
     
     @property
     def porcentaje_gastado(self):
-        if self.limite_asignado > 0:
-            return min((self.gastado_actual / self.limite_asignado) * 100, 100)
-        return 0
+        return self.get_progress_percentage(self.gastado_actual, self.limite_asignado)
     
     @property
     def limite_restante(self):
-        return max(self.limite_asignado - self.gastado_actual, 0)
+        return self.get_remaining_amount(self.gastado_actual, self.limite_asignado)
     
     @property
     def esta_excedido(self):

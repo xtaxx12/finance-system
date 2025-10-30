@@ -2,9 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from decimal import Decimal
+from apps.common.mixins import ProgressMixin
 
 
-class Loan(models.Model):
+class Loan(models.Model, ProgressMixin):
     """Modelo para representar un préstamo o deuda"""
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='loans')
@@ -56,7 +57,7 @@ class Loan(models.Model):
     @property
     def remaining_amount(self):
         """Calcula el monto restante por pagar"""
-        return max(Decimal('0'), self.amount - self.total_paid)
+        return self.get_remaining_amount(self.total_paid, self.amount)
     
     def get_paid_installments(self):
         """Cuenta las cuotas pagadas"""
@@ -73,9 +74,7 @@ class Loan(models.Model):
     @property
     def progress_percentage(self):
         """Calcula el porcentaje de progreso"""
-        if self.installments == 0:
-            return 0
-        return (self.paid_installments / self.installments) * 100
+        return self.get_progress_percentage(self.paid_installments, self.installments)
     
     @property
     def is_completed(self):
