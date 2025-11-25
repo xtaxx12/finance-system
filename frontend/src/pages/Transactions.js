@@ -26,6 +26,13 @@ const Transactions = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [pagination, setPagination] = useState({
+    count: 0,
+    next: null,
+    previous: null,
+    currentPage: 1,
+    totalPages: 1
+  });
   const [formData, setFormData] = useState({
     monto: '',
     descripcion: '',
@@ -36,22 +43,51 @@ const Transactions = () => {
   });
 
   useEffect(() => {
-    fetchTransactions();
+    fetchTransactions(1);
     if (activeTab === 'gastos') {
       fetchCategories();
     }
   }, [activeTab]);
 
-  const fetchTransactions = async () => {
+  const fetchTransactions = async (page = 1) => {
     setLoading(true);
     try {
       const endpoint = activeTab === 'gastos' ? '/transactions/gastos/' : '/transactions/ingresos/';
-      const response = await api.get(endpoint);
-      setTransactions(response.data.results || response.data);
+      const response = await api.get(`${endpoint}?page=${page}`);
+      
+      // Manejar respuesta paginada
+      if (response.data.results) {
+        setTransactions(response.data.results);
+        setPagination({
+          count: response.data.count,
+          next: response.data.next,
+          previous: response.data.previous,
+          currentPage: page,
+          totalPages: Math.ceil(response.data.count / 20) // PAGE_SIZE = 20
+        });
+      } else {
+        // Fallback para respuesta sin paginación
+        setTransactions(response.data);
+        setPagination({
+          count: response.data.length,
+          next: null,
+          previous: null,
+          currentPage: 1,
+          totalPages: 1
+        });
+      }
     } catch (error) {
       toast.error('Error al cargar transacciones');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= pagination.totalPages) {
+      fetchTransactions(newPage);
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -96,7 +132,7 @@ const Transactions = () => {
         es_recurrente: false,
         frecuencia_dias: ''
       });
-      fetchTransactions();
+      fetchTransactions(1);
     } catch (error) {
       // Error manejado con toast
       toast.error(error.response?.data?.detail || 'Error al guardar transacción');
@@ -109,7 +145,12 @@ const Transactions = () => {
         const endpoint = activeTab === 'gastos' ? `/transactions/gastos/${id}/` : `/transactions/ingresos/${id}/`;
         await api.delete(endpoint);
         toast.success('Transacción eliminada');
-        fetchTransactions();
+        // Si es la última transacción de la página y no es la primera página, ir a la anterior
+        if (transactions.length === 1 && pagination.currentPage > 1) {
+          fetchTransactions(pagination.currentPage - 1);
+        } else {
+          fetchTransactions(pagination.currentPage);
+        }
       } catch (error) {
         toast.error('Error al eliminar transacción');
       }
@@ -544,6 +585,203 @@ const Transactions = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* Paginación */}
+        {!loading && transactions.length > 0 && pagination.totalPages > 1 && (
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '0.5rem',
+            marginTop: '2rem',
+            paddingTop: '1.5rem',
+            borderTop: `1px solid ${colors.border}`
+          }}>
+            {/* Botón Primera Página */}
+            <button
+              onClick={() => handlePageChange(1)}
+              disabled={pagination.currentPage === 1}
+              style={{
+                padding: '0.5rem 0.75rem',
+                border: `1px solid ${colors.border}`,
+                borderRadius: '0.5rem',
+                background: pagination.currentPage === 1 ? colors.surfaceHover : colors.surface,
+                color: pagination.currentPage === 1 ? colors.textMuted : colors.textPrimary,
+                cursor: pagination.currentPage === 1 ? 'not-allowed' : 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                transition: 'all 0.2s ease',
+                opacity: pagination.currentPage === 1 ? 0.5 : 1
+              }}
+              onMouseEnter={(e) => {
+                if (pagination.currentPage !== 1) {
+                  e.currentTarget.style.background = colors.surfaceHover;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (pagination.currentPage !== 1) {
+                  e.currentTarget.style.background = colors.surface;
+                }
+              }}
+            >
+              ««
+            </button>
+
+            {/* Botón Anterior */}
+            <button
+              onClick={() => handlePageChange(pagination.currentPage - 1)}
+              disabled={!pagination.previous}
+              style={{
+                padding: '0.5rem 1rem',
+                border: `1px solid ${colors.border}`,
+                borderRadius: '0.5rem',
+                background: !pagination.previous ? colors.surfaceHover : colors.surface,
+                color: !pagination.previous ? colors.textMuted : colors.textPrimary,
+                cursor: !pagination.previous ? 'not-allowed' : 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                transition: 'all 0.2s ease',
+                opacity: !pagination.previous ? 0.5 : 1
+              }}
+              onMouseEnter={(e) => {
+                if (pagination.previous) {
+                  e.currentTarget.style.background = colors.surfaceHover;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (pagination.previous) {
+                  e.currentTarget.style.background = colors.surface;
+                }
+              }}
+            >
+              « Anterior
+            </button>
+
+            {/* Números de Página */}
+            <div style={{
+              display: 'flex',
+              gap: '0.25rem',
+              alignItems: 'center'
+            }}>
+              {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                let pageNum;
+                if (pagination.totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (pagination.currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (pagination.currentPage >= pagination.totalPages - 2) {
+                  pageNum = pagination.totalPages - 4 + i;
+                } else {
+                  pageNum = pagination.currentPage - 2 + i;
+                }
+
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    style={{
+                      padding: '0.5rem 0.75rem',
+                      minWidth: '40px',
+                      border: `1px solid ${colors.border}`,
+                      borderRadius: '0.5rem',
+                      background: pagination.currentPage === pageNum ? '#2563EB' : colors.surface,
+                      color: pagination.currentPage === pageNum ? 'white' : colors.textPrimary,
+                      cursor: 'pointer',
+                      fontSize: '0.875rem',
+                      fontWeight: pagination.currentPage === pageNum ? '600' : '500',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (pagination.currentPage !== pageNum) {
+                        e.currentTarget.style.background = colors.surfaceHover;
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (pagination.currentPage !== pageNum) {
+                        e.currentTarget.style.background = colors.surface;
+                      }
+                    }}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Botón Siguiente */}
+            <button
+              onClick={() => handlePageChange(pagination.currentPage + 1)}
+              disabled={!pagination.next}
+              style={{
+                padding: '0.5rem 1rem',
+                border: `1px solid ${colors.border}`,
+                borderRadius: '0.5rem',
+                background: !pagination.next ? colors.surfaceHover : colors.surface,
+                color: !pagination.next ? colors.textMuted : colors.textPrimary,
+                cursor: !pagination.next ? 'not-allowed' : 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                transition: 'all 0.2s ease',
+                opacity: !pagination.next ? 0.5 : 1
+              }}
+              onMouseEnter={(e) => {
+                if (pagination.next) {
+                  e.currentTarget.style.background = colors.surfaceHover;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (pagination.next) {
+                  e.currentTarget.style.background = colors.surface;
+                }
+              }}
+            >
+              Siguiente »
+            </button>
+
+            {/* Botón Última Página */}
+            <button
+              onClick={() => handlePageChange(pagination.totalPages)}
+              disabled={pagination.currentPage === pagination.totalPages}
+              style={{
+                padding: '0.5rem 0.75rem',
+                border: `1px solid ${colors.border}`,
+                borderRadius: '0.5rem',
+                background: pagination.currentPage === pagination.totalPages ? colors.surfaceHover : colors.surface,
+                color: pagination.currentPage === pagination.totalPages ? colors.textMuted : colors.textPrimary,
+                cursor: pagination.currentPage === pagination.totalPages ? 'not-allowed' : 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                transition: 'all 0.2s ease',
+                opacity: pagination.currentPage === pagination.totalPages ? 0.5 : 1
+              }}
+              onMouseEnter={(e) => {
+                if (pagination.currentPage !== pagination.totalPages) {
+                  e.currentTarget.style.background = colors.surfaceHover;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (pagination.currentPage !== pagination.totalPages) {
+                  e.currentTarget.style.background = colors.surface;
+                }
+              }}
+            >
+              »»
+            </button>
+
+            {/* Info de Página */}
+            <div style={{
+              marginLeft: '1rem',
+              padding: '0.5rem 1rem',
+              background: colors.surfaceHover,
+              borderRadius: '0.5rem',
+              fontSize: '0.875rem',
+              color: colors.textSecondary,
+              fontWeight: '500'
+            }}>
+              Página {pagination.currentPage} de {pagination.totalPages}
             </div>
           </div>
         )}
