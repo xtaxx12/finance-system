@@ -6,14 +6,14 @@ import { useBalance } from '../contexts/BalanceContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import { 
-  TrendingUp, 
-  TrendingDown, 
-  Wallet, 
-  CreditCard, 
-  DollarSign,
-  AlertCircle,
-  User
-} from 'lucide-react';
+  FiTrendingUp, 
+  FiTrendingDown, 
+  FiDollarSign,
+  FiCreditCard,
+  FiAlertCircle,
+  FiUser
+} from 'react-icons/fi';
+import { BiWallet } from 'react-icons/bi';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, LineElement, PointElement);
 
@@ -390,7 +390,7 @@ const Dashboard = () => {
               cursor: 'pointer',
               boxShadow: '0 2px 8px rgba(37, 99, 235, 0.3)'
             }}>
-              <User size={20} />
+              <FiUser size={20} />
             </div>
           </div>
         </div>
@@ -442,7 +442,7 @@ const Dashboard = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <TrendingUp size={24} color="#2563EB" />
+                <FiTrendingUp size={24} color="#2563EB" />
               </div>
             </div>
             <div style={{ fontSize: '0.875rem', color: '#64748B', marginBottom: '0.5rem' }}>
@@ -452,7 +452,7 @@ const Dashboard = () => {
               {formatCurrency(dashboardData.total_ingresos)}
             </div>
             <div style={{ fontSize: '0.875rem', color: '#10B981', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-              <TrendingUp size={16} />
+              <FiTrendingUp size={16} />
               <span>+{((dashboardData.total_ingresos / Math.max(dashboardData.total_gastos, 1)) * 100).toFixed(1)}%</span>
             </div>
           </div>
@@ -484,7 +484,7 @@ const Dashboard = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <TrendingDown size={24} color="#EF4444" />
+                <FiTrendingDown size={24} color="#EF4444" />
               </div>
             </div>
             <div style={{ fontSize: '0.875rem', color: '#64748B', marginBottom: '0.5rem' }}>
@@ -494,7 +494,7 @@ const Dashboard = () => {
               {formatCurrency(dashboardData.total_gastos)}
             </div>
             <div style={{ fontSize: '0.875rem', color: '#EF4444', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-              <TrendingDown size={16} />
+              <FiTrendingDown size={16} />
               <span>{((dashboardData.total_gastos / Math.max(dashboardData.total_ingresos, 1)) * 100).toFixed(1)}%</span>
             </div>
           </div>
@@ -526,7 +526,7 @@ const Dashboard = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <Wallet size={24} color={dashboardData.balance >= 0 ? '#2563EB' : '#EF4444'} />
+                <BiWallet size={24} color={dashboardData.balance >= 0 ? '#2563EB' : '#EF4444'} />
               </div>
             </div>
             <div style={{ fontSize: '0.875rem', color: '#64748B', marginBottom: '0.5rem' }}>
@@ -571,7 +571,7 @@ const Dashboard = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <CreditCard size={24} color="#F59E0B" />
+                <FiCreditCard size={24} color="#F59E0B" />
               </div>
             </div>
             <div style={{ fontSize: '0.875rem', color: '#64748B', marginBottom: '0.5rem' }}>
@@ -609,7 +609,7 @@ const Dashboard = () => {
                 alignItems: 'center',
                 gap: '0.5rem'
               }}>
-                <CreditCard size={24} color="#2563EB" />
+                <FiCreditCard size={24} color="#2563EB" />
                 Resumen de Préstamos
               </h2>
               <p style={{ fontSize: '0.875rem', color: '#64748B', margin: 0 }}>
@@ -640,7 +640,7 @@ const Dashboard = () => {
                   justifyContent: 'center',
                   margin: '0 auto 0.75rem'
                 }}>
-                  <DollarSign size={20} color="#F59E0B" />
+                  <FiDollarSign size={20} color="#F59E0B" />
                 </div>
                 <div style={{ color: '#64748B', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
                   Total Adeudado
@@ -667,7 +667,7 @@ const Dashboard = () => {
                   justifyContent: 'center',
                   margin: '0 auto 0.75rem'
                 }}>
-                  <Wallet size={20} color={balance >= totalDebt ? '#10B981' : '#EF4444'} />
+                  <BiWallet size={20} color={balance >= totalDebt ? '#10B981' : '#EF4444'} />
                 </div>
                 <div style={{ color: '#64748B', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
                   Balance Disponible
@@ -698,7 +698,7 @@ const Dashboard = () => {
                   justifyContent: 'center',
                   margin: '0 auto 0.75rem'
                 }}>
-                  <TrendingUp size={20} color="#2563EB" />
+                  <FiTrendingUp size={20} color="#2563EB" />
                 </div>
                 <div style={{ color: '#64748B', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
                   Ratio Deuda/Ingresos
@@ -758,7 +758,7 @@ const Dashboard = () => {
                 alignItems: 'flex-start',
                 gap: '0.75rem'
               }}>
-                <AlertCircle size={20} color="#F59E0B" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <FiAlertCircle size={20} color="#F59E0B" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div>
                   <div style={{ fontWeight: '600', color: '#92400E', marginBottom: '0.25rem', fontSize: '0.875rem' }}>
                     Balance insuficiente
@@ -790,7 +790,7 @@ const Dashboard = () => {
               alignItems: 'center',
               gap: '0.5rem'
             }}>
-              <TrendingUp size={24} color="#2563EB" />
+              <FiTrendingUp size={24} color="#2563EB" />
               Flujo de Caja
             </h2>
             <p style={{ fontSize: '0.875rem', color: '#64748B', margin: 0 }}>
@@ -813,7 +813,7 @@ const Dashboard = () => {
               background: '#F8FAFC',
               borderRadius: '8px'
             }}>
-              <TrendingUp size={48} color="#CBD5E1" />
+              <FiTrendingUp size={48} color="#CBD5E1" />
               <div style={{ textAlign: 'center' }}>
                 <h4 style={{ color: '#1E293B', marginBottom: '0.5rem', fontSize: '1rem' }}>
                   Sin historial disponible
@@ -869,7 +869,7 @@ const Dashboard = () => {
                 background: '#F8FAFC',
                 borderRadius: '8px'
               }}>
-                <Wallet size={48} color="#CBD5E1" />
+                <BiWallet size={48} color="#CBD5E1" />
                 <div style={{ textAlign: 'center' }}>
                   <h4 style={{ color: '#1E293B', marginBottom: '0.5rem', fontSize: '1rem' }}>
                     Sin gastos registrados
@@ -918,7 +918,7 @@ const Dashboard = () => {
                 background: '#F8FAFC',
                 borderRadius: '8px'
               }}>
-                <TrendingUp size={48} color="#CBD5E1" />
+                <FiTrendingUp size={48} color="#CBD5E1" />
                 <div style={{ textAlign: 'center' }}>
                   <h4 style={{ color: '#1E293B', marginBottom: '0.5rem', fontSize: '1rem' }}>
                     Sin historial disponible
@@ -1138,7 +1138,7 @@ const Dashboard = () => {
                 alignItems: 'center',
                 gap: '0.5rem'
               }}>
-                <DollarSign size={24} color="#2563EB" />
+                <FiDollarSign size={24} color="#2563EB" />
                 Recomendaciones Inteligentes
               </h2>
               <p style={{ fontSize: '0.875rem', color: '#64748B', margin: 0 }}>
@@ -1208,7 +1208,7 @@ const Dashboard = () => {
                         alignItems: 'center',
                         gap: '0.25rem'
                       }}>
-                        <DollarSign size={14} color="#10B981" />
+                        <FiDollarSign size={14} color="#10B981" />
                         Potencial de ahorro
                       </div>
                       <div style={{
