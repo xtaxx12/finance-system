@@ -10,8 +10,7 @@ import {
   FiTrendingDown, 
   FiDollarSign,
   FiCreditCard,
-  FiAlertCircle,
-  FiUser
+  FiAlertCircle
 } from 'react-icons/fi';
 import { BiWallet } from 'react-icons/bi';
 
@@ -20,7 +19,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarEle
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { colors } = useTheme();
+  const { colors, isDarkMode } = useTheme();
   const { balance, totalDebt, availableBalance } = useBalance();
 
   useEffect(() => {
@@ -345,62 +344,22 @@ const Dashboard = () => {
   return (
     <div style={{ 
       minHeight: '100vh',
-      background: '#F8FAFC',
+      background: isDarkMode ? colors.background : '#F8FAFC',
       paddingBottom: '2rem'
     }}>
-      {/* Header Moderno con Avatar */}
-      <div style={{
-        background: 'white',
-        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-        padding: '1rem 2rem',
-        marginBottom: '2rem',
-        position: 'sticky',
-        top: 0,
-        zIndex: 100
-      }}>
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <div>
-            <h1 style={{
-              fontSize: '1.5rem',
-              fontWeight: '600',
-              color: '#1E293B',
-              margin: 0
-            }}>
-              Dashboard Financiero
-            </h1>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #2563EB 0%, #1E40AF 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontWeight: '600',
-              fontSize: '1rem',
-              cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(37, 99, 235, 0.3)'
-            }}>
-              <FiUser size={20} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 2rem' }}>
-        {/* Subtítulo */}
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem 2rem 0 2rem' }}>
+        {/* Título de Página */}
         <div style={{ marginBottom: '2rem' }}>
+          <h1 style={{
+            fontSize: '1.875rem',
+            fontWeight: '700',
+            color: colors.textPrimary,
+            margin: '0 0 0.5rem 0'
+          }}>
+            Dashboard Financiero
+          </h1>
           <p style={{
-            color: '#64748B',
+            color: colors.textSecondary,
             fontSize: '0.95rem',
             margin: 0
           }}>
@@ -417,20 +376,21 @@ const Dashboard = () => {
         }}>
           {/* Ingresos */}
           <div style={{
-            background: 'white',
+            background: colors.surface,
             borderRadius: '12px',
             padding: '1.5rem',
-            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+            boxShadow: colors.shadow,
+            border: `1px solid ${colors.border}`,
             transition: 'transform 0.2s, box-shadow 0.2s',
             cursor: 'pointer'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'translateY(-4px)';
-            e.currentTarget.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+            e.currentTarget.style.boxShadow = colors.shadowLg;
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)';
+            e.currentTarget.style.boxShadow = colors.shadow;
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
               <div style={{
@@ -445,10 +405,10 @@ const Dashboard = () => {
                 <FiTrendingUp size={24} color="#2563EB" />
               </div>
             </div>
-            <div style={{ fontSize: '0.875rem', color: '#64748B', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '0.875rem', color: colors.textSecondary, marginBottom: '0.5rem' }}>
               Ingresos del Mes
             </div>
-            <div style={{ fontSize: '1.875rem', fontWeight: '700', color: '#1E293B', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '1.875rem', fontWeight: '700', color: colors.textPrimary, marginBottom: '0.5rem' }}>
               {formatCurrency(dashboardData.total_ingresos)}
             </div>
             <div style={{ fontSize: '0.875rem', color: '#10B981', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
@@ -459,10 +419,11 @@ const Dashboard = () => {
 
           {/* Gastos */}
           <div style={{
-            background: 'white',
+            background: colors.surface,
             borderRadius: '12px',
             padding: '1.5rem',
-            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+            boxShadow: colors.shadow,
+            border: `1px solid ${colors.border}`,
             transition: 'transform 0.2s, box-shadow 0.2s',
             cursor: 'pointer'
           }}
@@ -501,10 +462,11 @@ const Dashboard = () => {
 
           {/* Balance */}
           <div style={{
-            background: 'white',
+            background: colors.surface,
             borderRadius: '12px',
             padding: '1.5rem',
-            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+            boxShadow: colors.shadow,
+            border: `1px solid ${colors.border}`,
             transition: 'transform 0.2s, box-shadow 0.2s',
             cursor: 'pointer'
           }}
@@ -546,10 +508,11 @@ const Dashboard = () => {
 
           {/* Deudas */}
           <div style={{
-            background: 'white',
+            background: colors.surface,
             borderRadius: '12px',
             padding: '1.5rem',
-            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+            boxShadow: colors.shadow,
+            border: `1px solid ${colors.border}`,
             transition: 'transform 0.2s, box-shadow 0.2s',
             cursor: 'pointer'
           }}
@@ -590,20 +553,14 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Resumen de Préstamos - Diseño Limpio */}
+        {/* Resumen de Préstamos - Diseño Plano */}
         {totalDebt > 0 && (
-          <div style={{
-            background: 'white',
-            borderRadius: '12px',
-            padding: '2rem',
-            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-            marginBottom: '2rem'
-          }}>
+          <>
             <div style={{ marginBottom: '1.5rem' }}>
               <h2 style={{ 
-                fontSize: '1.25rem', 
-                fontWeight: '600', 
-                color: '#1E293B',
+                fontSize: '1.5rem', 
+                fontWeight: '700', 
+                color: colors.textPrimary,
                 margin: '0 0 0.5rem 0',
                 display: 'flex',
                 alignItems: 'center',
@@ -612,69 +569,91 @@ const Dashboard = () => {
                 <FiCreditCard size={24} color="#2563EB" />
                 Resumen de Préstamos
               </h2>
-              <p style={{ fontSize: '0.875rem', color: '#64748B', margin: 0 }}>
+              <p style={{ fontSize: '0.875rem', color: colors.textSecondary, margin: 0 }}>
                 Estado actual de tus deudas y compromisos financieros
               </p>
             </div>
 
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
               gap: '1.5rem',
-              marginBottom: '1.5rem'
+              marginBottom: '2rem'
             }}>
               <div style={{
                 padding: '1.5rem',
-                background: 'white',
-                borderRadius: '8px',
-                border: '1px solid #E2E8F0',
-                textAlign: 'center'
+                background: colors.surface,
+                borderRadius: '12px',
+                border: `1px solid ${colors.border}`,
+                boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+                textAlign: 'center',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)';
               }}>
                 <div style={{ 
-                  width: '40px',
-                  height: '40px',
+                  width: '48px',
+                  height: '48px',
                   borderRadius: '50%',
                   background: '#FEF3C7',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  margin: '0 auto 0.75rem'
+                  margin: '0 auto 1rem'
                 }}>
-                  <FiDollarSign size={20} color="#F59E0B" />
+                  <FiDollarSign size={24} color="#F59E0B" />
                 </div>
-                <div style={{ color: '#64748B', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                <div style={{ color: colors.textSecondary, fontSize: '0.875rem', marginBottom: '0.5rem' }}>
                   Total Adeudado
                 </div>
-                <div style={{ color: '#1E293B', fontSize: '1.5rem', fontWeight: '700' }}>
+                <div style={{ color: colors.textPrimary, fontSize: '1.875rem', fontWeight: '700' }}>
                   {formatCurrency(totalDebt)}
                 </div>
               </div>
 
               <div style={{
                 padding: '1.5rem',
-                background: 'white',
-                borderRadius: '8px',
-                border: '1px solid #E2E8F0',
-                textAlign: 'center'
+                background: colors.surface,
+                borderRadius: '12px',
+                border: `1px solid ${colors.border}`,
+                boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+                textAlign: 'center',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)';
               }}>
                 <div style={{ 
-                  width: '40px',
-                  height: '40px',
+                  width: '48px',
+                  height: '48px',
                   borderRadius: '50%',
                   background: balance >= totalDebt ? '#DCFCE7' : '#FEE2E2',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  margin: '0 auto 0.75rem'
+                  margin: '0 auto 1rem'
                 }}>
-                  <BiWallet size={20} color={balance >= totalDebt ? '#10B981' : '#EF4444'} />
+                  <BiWallet size={24} color={balance >= totalDebt ? '#10B981' : '#EF4444'} />
                 </div>
-                <div style={{ color: '#64748B', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                <div style={{ color: colors.textSecondary, fontSize: '0.875rem', marginBottom: '0.5rem' }}>
                   Balance Disponible
                 </div>
                 <div style={{ 
-                  color: '#1E293B', 
-                  fontSize: '1.5rem', 
+                  color: colors.textPrimary, 
+                  fontSize: '1.875rem', 
                   fontWeight: '700' 
                 }}>
                   {formatCurrency(availableBalance)}
@@ -683,29 +662,40 @@ const Dashboard = () => {
 
               <div style={{
                 padding: '1.5rem',
-                background: 'white',
-                borderRadius: '8px',
-                border: '1px solid #E2E8F0',
-                textAlign: 'center'
+                background: colors.surface,
+                borderRadius: '12px',
+                border: `1px solid ${colors.border}`,
+                boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+                textAlign: 'center',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)';
               }}>
                 <div style={{ 
-                  width: '40px',
-                  height: '40px',
+                  width: '48px',
+                  height: '48px',
                   borderRadius: '50%',
                   background: '#EFF6FF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  margin: '0 auto 0.75rem'
+                  margin: '0 auto 1rem'
                 }}>
-                  <FiTrendingUp size={20} color="#2563EB" />
+                  <FiTrendingUp size={24} color="#2563EB" />
                 </div>
-                <div style={{ color: '#64748B', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                <div style={{ color: colors.textSecondary, fontSize: '0.875rem', marginBottom: '0.5rem' }}>
                   Ratio Deuda/Ingresos
                 </div>
                 <div style={{ 
-                  color: '#1E293B', 
-                  fontSize: '1.5rem', 
+                  color: colors.textPrimary, 
+                  fontSize: '1.875rem', 
                   fontWeight: '700' 
                 }}>
                   {dashboardData?.total_ingresos > 0 ? 
@@ -716,23 +706,30 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Barra de Progreso de Deuda */}
-            <div style={{ marginBottom: '1.5rem' }}>
+            {/* Barra de Progreso - Tarjeta Propia */}
+            <div style={{
+              background: colors.surface,
+              borderRadius: '12px',
+              padding: '1.5rem',
+              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+              marginBottom: '2rem',
+              border: `1px solid ${colors.border}`
+            }}>
               <div style={{ 
                 display: 'flex', 
                 justifyContent: 'space-between', 
-                marginBottom: '0.5rem',
+                marginBottom: '1rem',
                 fontSize: '0.875rem'
               }}>
-                <span style={{ color: '#64748B' }}>Progreso de pago</span>
-                <span style={{ color: '#2563EB', fontWeight: '600' }}>
+                <span style={{ color: colors.textSecondary, fontWeight: '500' }}>Progreso de pago</span>
+                <span style={{ color: '#2563EB', fontWeight: '700', fontSize: '1rem' }}>
                   {balance >= totalDebt ? '100%' : `${((balance / totalDebt) * 100).toFixed(1)}%`}
                 </span>
               </div>
               <div style={{
                 width: '100%',
-                height: '12px',
-                background: '#E2E8F0',
+                height: '16px',
+                background: isDarkMode ? colors.surfaceHover : '#E2E8F0',
                 borderRadius: '999px',
                 overflow: 'hidden'
               }}>
@@ -748,36 +745,41 @@ const Dashboard = () => {
               </div>
             </div>
 
+            {/* Alerta - Estilo Toast Flotante */}
             {balance < totalDebt && (
               <div style={{
-                padding: '1rem',
-                background: '#FEF3C7',
-                borderRadius: '8px',
+                maxWidth: '600px',
+                margin: '0 auto 2rem',
+                padding: '1rem 1.25rem',
+                background: isDarkMode ? '#FEF3C7' : '#FEF3C7',
+                borderRadius: '12px',
                 border: '1px solid #FDE68A',
                 display: 'flex',
                 alignItems: 'flex-start',
-                gap: '0.75rem'
+                gap: '0.75rem',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
               }}>
                 <FiAlertCircle size={20} color="#F59E0B" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div>
                   <div style={{ fontWeight: '600', color: '#92400E', marginBottom: '0.25rem', fontSize: '0.875rem' }}>
                     Balance insuficiente
                   </div>
-                  <div style={{ color: '#A16207', fontSize: '0.875rem' }}>
+                  <div style={{ color: '#A16207', fontSize: '0.875rem', lineHeight: '1.5' }}>
                     Tu balance actual no cubre el total de tus deudas. Considera generar más ingresos o renegociar tus préstamos.
                   </div>
                 </div>
               </div>
             )}
-          </div>
+          </>
         )}
 
         {/* Gráfico Principal - Flujo de Caja */}
         <div style={{
-          background: 'white',
+          background: colors.surface,
           borderRadius: '12px',
           padding: '2rem',
-          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+          boxShadow: colors.shadow,
+          border: `1px solid ${colors.border}`,
           marginBottom: '2rem'
         }}>
           <div style={{ marginBottom: '1.5rem' }}>
@@ -835,10 +837,11 @@ const Dashboard = () => {
         }}>
           {/* Distribución de Gastos */}
           <div style={{
-            background: 'white',
+            background: colors.surface,
             borderRadius: '12px',
             padding: '2rem',
-            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+            boxShadow: colors.shadow,
+            border: `1px solid ${colors.border}`
           }}>
             <div style={{ marginBottom: '1.5rem' }}>
               <h3 style={{ 
@@ -884,10 +887,11 @@ const Dashboard = () => {
 
           {/* Evolución Temporal */}
           <div style={{
-            background: 'white',
+            background: colors.surface,
             borderRadius: '12px',
             padding: '2rem',
-            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+            boxShadow: colors.shadow,
+            border: `1px solid ${colors.border}`
           }}>
             <div style={{ marginBottom: '1.5rem' }}>
               <h3 style={{ 
@@ -942,10 +946,11 @@ const Dashboard = () => {
           }}>
             {/* Análisis por Categoría */}
             <div style={{
-              background: 'white',
+              background: colors.surface,
               borderRadius: '12px',
               padding: '2rem',
-              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+              boxShadow: colors.shadow,
+              border: `1px solid ${colors.border}`
             }}>
               <div style={{ marginBottom: '1.5rem' }}>
                 <h3 style={{ 
@@ -1019,10 +1024,11 @@ const Dashboard = () => {
 
             {/* Historial Mensual */}
             <div style={{
-              background: 'white',
+              background: colors.surface,
               borderRadius: '12px',
               padding: '2rem',
-              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+              boxShadow: colors.shadow,
+              border: `1px solid ${colors.border}`
             }}>
               <div style={{ marginBottom: '1.5rem' }}>
                 <h3 style={{ 
@@ -1122,10 +1128,11 @@ const Dashboard = () => {
         {/* Recomendaciones Inteligentes */}
         {dashboardData.gastos_por_categoria.length > 0 && (
           <div style={{
-            background: 'white',
+            background: colors.surface,
             borderRadius: '12px',
             padding: '2rem',
-            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+            boxShadow: colors.shadow,
+            border: `1px solid ${colors.border}`,
             marginBottom: '2rem'
           }}>
             <div style={{ marginBottom: '1.5rem' }}>
@@ -1196,9 +1203,9 @@ const Dashboard = () => {
 
                     <div style={{
                       padding: '1rem',
-                      background: 'white',
+                      background: colors.surface,
                       borderRadius: '6px',
-                      border: '1px solid #E2E8F0'
+                      border: `1px solid ${colors.border}`
                     }}>
                       <div style={{
                         fontSize: '0.75rem',

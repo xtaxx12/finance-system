@@ -47,13 +47,13 @@ const Navbar = () => {
   };
 
   const navStyle = {
-    background: isDarkMode 
-      ? 'linear-gradient(135deg, #1E293B 0%, #334155 100%)'
-      : 'linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%)',
+    background: colors.surface,
     padding: '1rem 0',
-    marginBottom: '2rem',
-    boxShadow: colors.shadowLg,
+    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
     borderBottom: `1px solid ${colors.border}`,
+    position: 'sticky',
+    top: 0,
+    zIndex: 100
   };
 
   const navContainerStyle = {
@@ -66,9 +66,9 @@ const Navbar = () => {
   };
 
   const logoStyle = {
-    color: 'white',
-    fontSize: '1.5rem',
-    fontWeight: '700',
+    color: colors.textPrimary,
+    fontSize: '1.25rem',
+    fontWeight: '600',
     textDecoration: 'none',
     display: 'flex',
     alignItems: 'center',
@@ -89,9 +89,7 @@ const Navbar = () => {
     top: '100%',
     left: 0,
     right: 0,
-    background: isDarkMode 
-      ? 'linear-gradient(135deg, #1E293B 0%, #334155 100%)'
-      : 'linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%)',
+    background: colors.surface,
     padding: '1rem',
     gap: '0.5rem',
     boxShadow: colors.shadowLg,
@@ -105,7 +103,7 @@ const Navbar = () => {
     cursor: 'pointer',
     padding: '0.5rem',
     gap: '3px',
-    background: 'rgba(255, 255, 255, 0.1)',
+    background: colors.surfaceHover,
     borderRadius: '0.5rem',
     transition: 'all 0.2s ease'
   };
@@ -113,7 +111,7 @@ const Navbar = () => {
   const hamburgerLineStyle = {
     width: '20px',
     height: '2px',
-    background: 'white',
+    background: colors.textPrimary,
     borderRadius: '1px',
     transition: 'all 0.3s ease'
   };
@@ -124,10 +122,10 @@ const Navbar = () => {
   };
 
   const linkStyle = {
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: colors.textSecondary,
     textDecoration: 'none',
     padding: '0.5rem 1rem',
-    borderRadius: '0.75rem',
+    borderRadius: '0.5rem',
     transition: 'all 0.2s ease',
     fontSize: '0.875rem',
     fontWeight: '500',
@@ -137,9 +135,9 @@ const Navbar = () => {
 
   const activeLinkStyle = {
     ...linkStyle,
-    background: 'rgba(255, 255, 255, 0.1)',
-    color: 'white',
-    backdropFilter: 'blur(10px)'
+    color: '#2563EB',
+    background: '#EFF6FF',
+    fontWeight: '600'
   };
 
   const userInfoStyle = {
@@ -156,16 +154,19 @@ const Navbar = () => {
   };
 
   const logoutButtonStyle = {
-    background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
+    background: '#EF4444',
     color: 'white',
     border: 'none',
     padding: '0.5rem 1rem',
-    borderRadius: '0.75rem',
+    borderRadius: '0.5rem',
     cursor: 'pointer',
     fontSize: '0.875rem',
     fontWeight: '500',
     transition: 'all 0.2s ease',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem'
   };
 
   const toggleMobileMenu = () => {
@@ -201,7 +202,7 @@ const Navbar = () => {
           onClick={mobile ? closeMobileMenu : undefined}
           onMouseEnter={(e) => {
             if (window.location.pathname !== '/') {
-              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.target.style.background = colors.surfaceHover;
             }
           }}
           onMouseLeave={(e) => {
@@ -218,7 +219,7 @@ const Navbar = () => {
           onClick={mobile ? closeMobileMenu : undefined}
           onMouseEnter={(e) => {
             if (window.location.pathname !== '/transactions') {
-              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.target.style.background = colors.surfaceHover;
             }
           }}
           onMouseLeave={(e) => {
@@ -235,7 +236,7 @@ const Navbar = () => {
           onClick={mobile ? closeMobileMenu : undefined}
           onMouseEnter={(e) => {
             if (window.location.pathname !== '/goals') {
-              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.target.style.background = colors.surfaceHover;
             }
           }}
           onMouseLeave={(e) => {
@@ -252,7 +253,7 @@ const Navbar = () => {
           onClick={mobile ? closeMobileMenu : undefined}
           onMouseEnter={(e) => {
             if (window.location.pathname !== '/budgets') {
-              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.target.style.background = colors.surfaceHover;
             }
           }}
           onMouseLeave={(e) => {
@@ -269,7 +270,7 @@ const Navbar = () => {
           onClick={mobile ? closeMobileMenu : undefined}
           onMouseEnter={(e) => {
             if (window.location.pathname !== '/loans') {
-              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.target.style.background = colors.surfaceHover;
             }
           }}
           onMouseLeave={(e) => {
@@ -302,7 +303,7 @@ const Navbar = () => {
             <>
               <NavLinks />
               
-              <div style={{ height: '24px', width: '1px', background: 'rgba(255, 255, 255, 0.2)', margin: '0 0.5rem' }} />
+              <div style={{ height: '24px', width: '1px', background: colors.border, margin: '0 0.5rem' }} />
               
               <NotificationBell />
               <ThemeToggle />
@@ -312,12 +313,12 @@ const Navbar = () => {
                 style={window.location.pathname === '/profile' ? activeLinkStyle : linkStyle}
                 onMouseEnter={(e) => {
                   if (window.location.pathname !== '/profile') {
-                    e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                    e.target.style.background = colors.surfaceHover;
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (window.location.pathname !== '/profile') {
-                    e.target.style.background = window.location.pathname === '/profile' ? 'rgba(255, 255, 255, 0.1)' : 'transparent';
+                    e.target.style.background = window.location.pathname === '/profile' ? '#EFF6FF' : 'transparent';
                   }
                 }}
               >
@@ -353,8 +354,8 @@ const Navbar = () => {
           <div 
             style={hamburgerStyle}
             onClick={toggleMobileMenu}
-            onMouseEnter={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
-            onMouseLeave={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.1)'}
+            onMouseEnter={(e) => e.target.style.background = colors.border}
+            onMouseLeave={(e) => e.target.style.background = colors.surfaceHover}
           >
             <div style={{
               ...hamburgerLineStyle,
@@ -379,7 +380,7 @@ const Navbar = () => {
               
               <div style={{ 
                 height: '1px', 
-                background: 'rgba(255, 255, 255, 0.2)', 
+                background: colors.border, 
                 margin: '0.5rem 0',
                 width: '100%'
               }} />
@@ -402,7 +403,7 @@ const Navbar = () => {
                   width: '100%',
                   textAlign: 'center',
                   marginBottom: '0.5rem',
-                  background: window.location.pathname === '/profile' ? 'rgba(255, 255, 255, 0.1)' : 'transparent'
+                  background: window.location.pathname === '/profile' ? '#EFF6FF' : 'transparent'
                 }}
                 onClick={closeMobileMenu}
               >
