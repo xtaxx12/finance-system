@@ -17,6 +17,7 @@ export const BalanceProvider = ({ children }) => {
   const [balance, setBalance] = useState(0);
   const [totalDebt, setTotalDebt] = useState(0);
   const [availableBalance, setAvailableBalance] = useState(0);
+  const [debtProgress, setDebtProgress] = useState(0);
 
   // Calcular el balance total considerando préstamos
   const calculateBalance = async () => {
@@ -36,10 +37,12 @@ export const BalanceProvider = ({ children }) => {
       // Obtener resumen de préstamos de la API
       const loansResponse = await loansApi.getLoansSummary();
       const debt = loansResponse.data.remaining_debt || 0;
+      const progress = loansResponse.data.completion_percentage || 0;
 
       setBalance(transactionBalance);
       setTotalDebt(debt);
       setAvailableBalance(transactionBalance - debt);
+      setDebtProgress(progress);
     } catch (error) {
       
       // Error silenciado, usando fallback
@@ -66,6 +69,15 @@ export const BalanceProvider = ({ children }) => {
       setBalance(transactionBalance);
       setTotalDebt(debt);
       setAvailableBalance(transactionBalance - debt);
+      
+      // Calcular progreso de deuda manualmente
+      const totalOriginal = loans.reduce((sum, loan) => sum + loan.amount, 0);
+      const totalPaidAmount = loans.reduce((sum, loan) => {
+        const paid = loan.payments?.reduce((pSum, payment) => pSum + payment.amount, 0) || 0;
+        return sum + paid;
+      }, 0);
+      const progress = totalOriginal > 0 ? (totalPaidAmount / totalOriginal) * 100 : 0;
+      setDebtProgress(progress);
     }
   };
 
@@ -83,6 +95,7 @@ export const BalanceProvider = ({ children }) => {
     balance,
     totalDebt,
     availableBalance,
+    debtProgress,
     updateBalance
   };
 

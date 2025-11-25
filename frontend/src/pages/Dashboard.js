@@ -20,7 +20,7 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const { colors, isDarkMode } = useTheme();
-  const { balance, totalDebt, availableBalance } = useBalance();
+  const { balance, totalDebt, availableBalance, debtProgress } = useBalance();
 
   useEffect(() => {
     fetchDashboardData();
@@ -723,7 +723,7 @@ const Dashboard = () => {
               }}>
                 <span style={{ color: colors.textSecondary, fontWeight: '500' }}>Progreso de pago</span>
                 <span style={{ color: '#2563EB', fontWeight: '700', fontSize: '1rem' }}>
-                  {balance >= totalDebt ? '100%' : `${((balance / totalDebt) * 100).toFixed(1)}%`}
+                  {debtProgress >= 100 ? '100%' : `${debtProgress.toFixed(1)}%`}
                 </span>
               </div>
               <div style={{
@@ -734,9 +734,9 @@ const Dashboard = () => {
                 overflow: 'hidden'
               }}>
                 <div style={{
-                  width: `${Math.min((balance / totalDebt) * 100, 100)}%`,
+                  width: `${Math.min(debtProgress, 100)}%`,
                   height: '100%',
-                  background: balance >= totalDebt ? 
+                  background: debtProgress >= 100 ? 
                     'linear-gradient(90deg, #10B981 0%, #059669 100%)' :
                     'linear-gradient(90deg, #2563EB 0%, #1E40AF 100%)',
                   transition: 'width 0.5s ease',
