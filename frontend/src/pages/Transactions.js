@@ -2,6 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
+import { 
+  FiCoffee, 
+  FiHome, 
+  FiTrendingUp,
+  FiPackage,
+  FiShoppingCart
+} from 'react-icons/fi';
+import { 
+  GiClothes,
+  GiMeal,
+  GiHealthNormal
+} from 'react-icons/gi';
+import { 
+  MdOutlineDirectionsCar,
+  MdOutlineSchool
+} from 'react-icons/md';
 
 const Transactions = () => {
   const { colors, isDarkMode } = useTheme();
@@ -111,6 +127,44 @@ const Transactions = () => {
     return new Date(dateString).toLocaleDateString('es-MX');
   };
 
+  const capitalize = (str) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+
+  const getCategoryIcon = (categoryName) => {
+    if (!categoryName) return <FiPackage size={20} />;
+    
+    const name = categoryName.toLowerCase();
+    
+    if (name.includes('ropa') || name.includes('vestir') || name.includes('camisa')) {
+      return <GiClothes size={20} />;
+    }
+    if (name.includes('comida') || name.includes('alimento') || name.includes('restaurante')) {
+      return <GiMeal size={20} />;
+    }
+    if (name.includes('transporte') || name.includes('auto') || name.includes('gasolina')) {
+      return <MdOutlineDirectionsCar size={20} />;
+    }
+    if (name.includes('salud') || name.includes('médico') || name.includes('medicina')) {
+      return <GiHealthNormal size={20} />;
+    }
+    if (name.includes('educación') || name.includes('escuela') || name.includes('curso')) {
+      return <MdOutlineSchool size={20} />;
+    }
+    if (name.includes('hogar') || name.includes('casa') || name.includes('vivienda')) {
+      return <FiHome size={20} />;
+    }
+    if (name.includes('entretenimiento') || name.includes('ocio')) {
+      return <FiCoffee size={20} />;
+    }
+    if (name.includes('compras') || name.includes('shopping')) {
+      return <FiShoppingCart size={20} />;
+    }
+    
+    return <FiPackage size={20} />;
+  };
+
   return (
     <div className="container animate-fade-in">
       {/* Header */}
@@ -146,30 +200,30 @@ const Transactions = () => {
         </button>
       </div>
 
-      {/* Tabs Modernos */}
+      {/* Segmented Control Moderno */}
       <div style={{ 
         display: 'flex', 
-        gap: '0.5rem',
+        gap: '0.25rem',
         marginBottom: '2rem',
-        background: colors.surface,
-        padding: '0.5rem',
-        borderRadius: '1rem',
-        border: `1px solid ${colors.border}`,
-        boxShadow: colors.shadow
+        background: isDarkMode ? '#1F2937' : '#F3F4F6',
+        padding: '0.375rem',
+        borderRadius: '0.75rem',
+        maxWidth: '400px'
       }}>
         <button 
           onClick={() => setActiveTab('gastos')}
           style={{
             flex: 1,
-            padding: '0.75rem 1.5rem',
+            padding: '0.625rem 1.25rem',
             border: 'none',
-            borderRadius: '0.75rem',
+            borderRadius: '0.5rem',
             fontSize: '0.875rem',
             fontWeight: '600',
             cursor: 'pointer',
             transition: 'all 0.2s ease',
-            background: activeTab === 'gastos' ? colors.gradientExpense : 'transparent',
-            color: activeTab === 'gastos' ? 'white' : colors.textSecondary,
+            background: activeTab === 'gastos' ? colors.surface : 'transparent',
+            color: activeTab === 'gastos' ? colors.textPrimary : colors.textSecondary,
+            boxShadow: activeTab === 'gastos' ? '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)' : 'none',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -183,15 +237,16 @@ const Transactions = () => {
           onClick={() => setActiveTab('ingresos')}
           style={{
             flex: 1,
-            padding: '0.75rem 1.5rem',
+            padding: '0.625rem 1.25rem',
             border: 'none',
-            borderRadius: '0.75rem',
+            borderRadius: '0.5rem',
             fontSize: '0.875rem',
             fontWeight: '600',
             cursor: 'pointer',
             transition: 'all 0.2s ease',
-            background: activeTab === 'ingresos' ? colors.gradientIncome : 'transparent',
-            color: activeTab === 'ingresos' ? 'white' : colors.textSecondary,
+            background: activeTab === 'ingresos' ? colors.surface : 'transparent',
+            color: activeTab === 'ingresos' ? colors.textPrimary : colors.textSecondary,
+            boxShadow: activeTab === 'ingresos' ? '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)' : 'none',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -388,54 +443,68 @@ const Transactions = () => {
                     transition: 'all 0.2s ease'
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.boxShadow = colors.shadowLg;
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = colors.shadowLg;
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = 'none';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
+                    {/* Icono Inteligente con fondo circular */}
                     <div style={{
                       width: '48px',
                       height: '48px',
                       borderRadius: '50%',
-                      background: activeTab === 'gastos' ? `${colors.expense}15` : `${colors.income}15`,
+                      background: isDarkMode ? '#374151' : '#F3F4F6',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '1.5rem'
+                      color: activeTab === 'gastos' ? '#FB7185' : '#10B981',
+                      flexShrink: 0
                     }}>
-                      {activeTab === 'gastos' ? '💸' : '💰'}
+                      {activeTab === 'gastos' 
+                        ? getCategoryIcon(transaction.categoria_info?.nombre)
+                        : <FiTrendingUp size={20} />
+                      }
                     </div>
                     
-                    <div style={{ flex: 1 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      {/* Título con capitalize */}
                       <div style={{ 
                         fontWeight: '600', 
-                        color: colors.textPrimary,
-                        marginBottom: '0.25rem'
+                        color: isDarkMode ? 'white' : colors.textPrimary,
+                        marginBottom: '0.25rem',
+                        textTransform: 'capitalize'
                       }}>
-                        {transaction.descripcion || 'Sin descripción'}
+                        {capitalize(transaction.descripcion) || 'Sin descripción'}
                       </div>
+                      {/* Metadatos en gris */}
                       <div style={{ 
                         fontSize: '0.875rem', 
-                        color: colors.textSecondary,
+                        color: isDarkMode ? '#9CA3AF' : '#6B7280',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '1rem'
+                        gap: '0.75rem',
+                        flexWrap: 'wrap'
                       }}>
-                        <span>📅 {formatDate(transaction.fecha)}</span>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                          📅 {formatDate(transaction.fecha)}
+                        </span>
                         {activeTab === 'gastos' && transaction.categoria_info && (
-                          <span>🏷️ {transaction.categoria_info.nombre}</span>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                            🏷️ {transaction.categoria_info.nombre}
+                          </span>
                         )}
                         {transaction.es_recurrente && (
                           <span style={{ 
                             background: colors.primary + '20',
                             color: colors.primary,
-                            padding: '0.25rem 0.5rem',
-                            borderRadius: '1rem',
-                            fontSize: '0.75rem'
+                            padding: '0.125rem 0.5rem',
+                            borderRadius: '0.375rem',
+                            fontSize: '0.75rem',
+                            fontWeight: '500'
                           }}>
                             🔄 Recurrente
                           </span>
@@ -447,13 +516,15 @@ const Transactions = () => {
                   <div style={{ 
                     display: 'flex', 
                     alignItems: 'center', 
-                    gap: '1rem' 
+                    gap: '1rem',
+                    flexShrink: 0
                   }}>
+                    {/* Monto con color Rose-400 para gastos */}
                     <div style={{ 
                       textAlign: 'right',
                       fontWeight: '700',
                       fontSize: '1.25rem',
-                      color: activeTab === 'gastos' ? colors.expense : colors.income
+                      color: activeTab === 'gastos' ? '#FB7185' : colors.income
                     }}>
                       {formatCurrency(transaction.monto)}
                     </div>
