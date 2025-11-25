@@ -448,10 +448,10 @@ const Dashboard = () => {
                 <FiTrendingDown size={24} color="#EF4444" />
               </div>
             </div>
-            <div style={{ fontSize: '0.875rem', color: '#64748B', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '0.875rem', color: colors.textSecondary, marginBottom: '0.5rem' }}>
               Gastos del Mes
             </div>
-            <div style={{ fontSize: '1.875rem', fontWeight: '700', color: '#1E293B', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '1.875rem', fontWeight: '700', color: colors.textPrimary, marginBottom: '0.5rem' }}>
               {formatCurrency(dashboardData.total_gastos)}
             </div>
             <div style={{ fontSize: '0.875rem', color: '#EF4444', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
@@ -491,10 +491,10 @@ const Dashboard = () => {
                 <BiWallet size={24} color={dashboardData.balance >= 0 ? '#2563EB' : '#EF4444'} />
               </div>
             </div>
-            <div style={{ fontSize: '0.875rem', color: '#64748B', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '0.875rem', color: colors.textSecondary, marginBottom: '0.5rem' }}>
               Balance Actual
             </div>
-            <div style={{ fontSize: '1.875rem', fontWeight: '700', color: '#1E293B', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '1.875rem', fontWeight: '700', color: colors.textPrimary, marginBottom: '0.5rem' }}>
               {formatCurrency(dashboardData.balance)}
             </div>
             <div style={{ 
@@ -537,10 +537,10 @@ const Dashboard = () => {
                 <FiCreditCard size={24} color="#F59E0B" />
               </div>
             </div>
-            <div style={{ fontSize: '0.875rem', color: '#64748B', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '0.875rem', color: colors.textSecondary, marginBottom: '0.5rem' }}>
               Deudas Pendientes
             </div>
-            <div style={{ fontSize: '1.875rem', fontWeight: '700', color: '#1E293B', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '1.875rem', fontWeight: '700', color: colors.textPrimary, marginBottom: '0.5rem' }}>
               {formatCurrency(totalDebt)}
             </div>
             <div style={{ 
@@ -786,7 +786,7 @@ const Dashboard = () => {
             <h2 style={{ 
               fontSize: '1.25rem', 
               fontWeight: '600', 
-              color: '#1E293B',
+              color: colors.textPrimary,
               margin: '0 0 0.5rem 0',
               display: 'flex',
               alignItems: 'center',
@@ -795,7 +795,7 @@ const Dashboard = () => {
               <FiTrendingUp size={24} color="#2563EB" />
               Flujo de Caja
             </h2>
-            <p style={{ fontSize: '0.875rem', color: '#64748B', margin: 0 }}>
+            <p style={{ fontSize: '0.875rem', color: colors.textSecondary, margin: 0 }}>
               Comparación de ingresos vs gastos a lo largo del tiempo
             </p>
           </div>
@@ -817,10 +817,10 @@ const Dashboard = () => {
             }}>
               <FiTrendingUp size={48} color="#CBD5E1" />
               <div style={{ textAlign: 'center' }}>
-                <h4 style={{ color: '#1E293B', marginBottom: '0.5rem', fontSize: '1rem' }}>
+                <h4 style={{ color: colors.textPrimary, marginBottom: '0.5rem', fontSize: '1rem' }}>
                   Sin historial disponible
                 </h4>
-                <p style={{ color: '#64748B', margin: 0, fontSize: '0.875rem' }}>
+                <p style={{ color: colors.textSecondary, margin: 0, fontSize: '0.875rem' }}>
                   Los datos aparecerán conforme uses la aplicación
                 </p>
               </div>
@@ -847,12 +847,12 @@ const Dashboard = () => {
               <h3 style={{ 
                 fontSize: '1.125rem', 
                 fontWeight: '600', 
-                color: '#1E293B',
+                color: colors.textPrimary,
                 margin: '0 0 0.5rem 0'
               }}>
                 Distribución de Gastos
               </h3>
-              <p style={{ fontSize: '0.875rem', color: '#64748B', margin: 0 }}>
+              <p style={{ fontSize: '0.875rem', color: colors.textSecondary, margin: 0 }}>
                 Gastos organizados por categoría
               </p>
             </div>
@@ -874,10 +874,10 @@ const Dashboard = () => {
               }}>
                 <BiWallet size={48} color="#CBD5E1" />
                 <div style={{ textAlign: 'center' }}>
-                  <h4 style={{ color: '#1E293B', marginBottom: '0.5rem', fontSize: '1rem' }}>
+                  <h4 style={{ color: colors.textPrimary, marginBottom: '0.5rem', fontSize: '1rem' }}>
                     Sin gastos registrados
                   </h4>
-                  <p style={{ color: '#64748B', margin: 0, fontSize: '0.875rem' }}>
+                  <p style={{ color: colors.textSecondary, margin: 0, fontSize: '0.875rem' }}>
                     Agrega algunos gastos para ver la distribución
                   </p>
                 </div>
@@ -897,12 +897,12 @@ const Dashboard = () => {
               <h3 style={{ 
                 fontSize: '1.125rem', 
                 fontWeight: '600', 
-                color: '#1E293B',
+                color: colors.textPrimary,
                 margin: '0 0 0.5rem 0'
               }}>
                 Evolución Mensual
               </h3>
-              <p style={{ fontSize: '0.875rem', color: '#64748B', margin: 0 }}>
+              <p style={{ fontSize: '0.875rem', color: colors.textSecondary, margin: 0 }}>
                 Comparación mensual de ingresos y gastos
               </p>
             </div>
@@ -956,7 +956,7 @@ const Dashboard = () => {
                 <h3 style={{ 
                   fontSize: '1.125rem', 
                   fontWeight: '600', 
-                  color: '#1E293B',
+                  color: colors.textPrimary,
                   margin: '0 0 0.5rem 0'
                 }}>
                   Análisis por Categoría
@@ -994,7 +994,7 @@ const Dashboard = () => {
                       <div>
                         <div style={{
                           fontWeight: '600',
-                          color: '#1E293B',
+                          color: colors.textPrimary,
                           marginBottom: '0.25rem',
                           fontSize: '0.875rem'
                         }}>
@@ -1002,7 +1002,7 @@ const Dashboard = () => {
                         </div>
                         <div style={{
                           fontSize: '0.75rem',
-                          color: '#64748B'
+                          color: colors.textSecondary
                         }}>
                           {((categoria.total / dashboardData.total_gastos) * 100).toFixed(1)}% del total
                         </div>
@@ -1011,7 +1011,7 @@ const Dashboard = () => {
                     <div style={{ textAlign: 'right' }}>
                       <div style={{
                         fontWeight: '700',
-                        color: '#1E293B',
+                        color: colors.textPrimary,
                         fontSize: '1rem'
                       }}>
                         {formatCurrency(categoria.total)}
@@ -1034,7 +1034,7 @@ const Dashboard = () => {
                 <h3 style={{ 
                   fontSize: '1.125rem', 
                   fontWeight: '600', 
-                  color: '#1E293B',
+                  color: colors.textPrimary,
                   margin: '0 0 0.5rem 0'
                 }}>
                   Historial Mensual
@@ -1058,7 +1058,7 @@ const Dashboard = () => {
                   }}>
                     <div style={{
                       fontWeight: '600',
-                      color: '#1E293B',
+                      color: colors.textPrimary,
                       marginBottom: '0.75rem',
                       fontSize: '1rem'
                     }}>
@@ -1139,7 +1139,7 @@ const Dashboard = () => {
               <h2 style={{ 
                 fontSize: '1.25rem', 
                 fontWeight: '600', 
-                color: '#1E293B',
+                color: colors.textPrimary,
                 margin: '0 0 0.5rem 0',
                 display: 'flex',
                 alignItems: 'center',
@@ -1148,7 +1148,7 @@ const Dashboard = () => {
                 <FiDollarSign size={24} color="#2563EB" />
                 Recomendaciones Inteligentes
               </h2>
-              <p style={{ fontSize: '0.875rem', color: '#64748B', margin: 0 }}>
+              <p style={{ fontSize: '0.875rem', color: colors.textSecondary, margin: 0 }}>
                 Oportunidades de ahorro identificadas
               </p>
             </div>
@@ -1209,7 +1209,7 @@ const Dashboard = () => {
                     }}>
                       <div style={{
                         fontSize: '0.75rem',
-                        color: '#64748B',
+                        color: colors.textSecondary,
                         marginBottom: '0.5rem',
                         display: 'flex',
                         alignItems: 'center',
