@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, LineElement, PointElement } from 'chart.js';
 import { Pie, Bar, Line } from 'react-chartjs-2';
 import { useTheme } from '../contexts/ThemeContext';
-import { useAuth } from '../contexts/AuthContext';
 import { useBalance } from '../contexts/BalanceContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
@@ -13,8 +12,7 @@ import {
   CreditCard, 
   DollarSign,
   AlertCircle,
-  User,
-  LogOut
+  User
 } from 'lucide-react';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, LineElement, PointElement);
@@ -22,8 +20,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarEle
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { colors, isDarkMode } = useTheme();
-  const { user } = useAuth();
+  const { colors } = useTheme();
   const { balance, totalDebt, availableBalance } = useBalance();
 
   useEffect(() => {
