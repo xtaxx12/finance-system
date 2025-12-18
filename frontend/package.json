@@ -23,12 +23,14 @@
     "web-vitals": "^3.5.0"
   },
   "scripts": {
+    "postinstall": "chmod +x node_modules/.bin/* 2>/dev/null || true",
     "start": "npx react-scripts start",
-    "build": "npx react-scripts build",
+    "build": "node node_modules/react-scripts/bin/react-scripts.js build",
     "test": "npx react-scripts test",
     "eject": "npx react-scripts eject"
   },
   "overrides": {
+    "webpack": "5.88.0",
     "nth-check": "^2.1.1",
     "postcss": "^8.4.31"
   },
