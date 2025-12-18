@@ -31,7 +31,6 @@
     "eject": "npx react-scripts eject"
   },
   "overrides": {
-    "webpack": "5.88.0",
     "nth-check": "^2.1.1",
     "postcss": "^8.4.31"
   },
