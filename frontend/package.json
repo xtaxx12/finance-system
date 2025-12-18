@@ -6,6 +6,7 @@
     "node": "20.x"
   },
   "dependencies": {
+    "@apideck/better-ajv-errors": "^0.3.6",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
