@@ -1,0 +1,40 @@
+# ====================================================================
+# CODEOWNERS - Finance System
+# Description: Define los propietarios del código para revisiones
+# ====================================================================
+
+# Propietarios globales (default)
+* @team-leads
+
+# Backend - Python/Django
+/backend/ @backend-team
+/backend/apps/ @backend-team
+/backend/apps/users/ @backend-team @security-team
+/backend/apps/transactions/ @backend-team
+
+# Frontend - React/Vite
+/frontend/ @frontend-team
+/frontend/src/components/ @frontend-team
+/frontend/src/pages/ @frontend-team
+/frontend/e2e/ @qa-team @frontend-team
+
+# DevOps & Infrastructure
+/.github/ @devops-team
+/docker-compose.yml @devops-team
+**/Dockerfile @devops-team
+/.github/workflows/ @devops-team
+
+# Security sensitive files
+**/settings.py @backend-team @security-team
+**/.env* @devops-team @security-team
+**/requirements.txt @backend-team @security-team
+/backend/apps/users/ @backend-team @security-team
+
+# Configuration files
+/frontend/package.json @frontend-team
+/frontend/vite.config.js @frontend-team
+/backend/pytest.ini @qa-team @backend-team
+
+# Documentation
+*.md @team-leads
+/docs/ @team-leads

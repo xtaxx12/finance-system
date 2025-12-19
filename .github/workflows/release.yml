@@ -1,0 +1,173 @@
+# ====================================================================
+# Release Pipeline - Finance System
+# Author: Senior DevOps Engineer
+# Description: Pipeline de release automático con semantic versioning
+# ====================================================================
+
+name: 🚀 Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: 'patch'
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+
+jobs:
+  # ============================================================
+  # JOB: Semantic Release
+  # ============================================================
+  release:
+    name: 📦 Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.version.outputs.new_version }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Get current version
+        id: current_version
+        run: |
+          # Obtener el último tag de versión
+          CURRENT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "current_version=${CURRENT_VERSION}" >> $GITHUB_OUTPUT
+          echo "Current version: ${CURRENT_VERSION}"
+      
+      - name: Calculate new version
+        id: version
+        run: |
+          CURRENT="${{ steps.current_version.outputs.current_version }}"
+          CURRENT="${CURRENT#v}"  # Remover 'v' prefix
+          
+          # Parsing semver
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+          MAJOR=${MAJOR:-0}
+          MINOR=${MINOR:-0}
+          PATCH=${PATCH:-0}
+          
+          # Determinar tipo de release
+          RELEASE_TYPE="${{ github.event.inputs.release_type || 'patch' }}"
+          
+          # Si es push automático, analizar commits
+          if [ "${{ github.event_name }}" == "push" ]; then
+            COMMITS=$(git log --oneline ${{ steps.current_version.outputs.current_version }}..HEAD 2>/dev/null || git log --oneline)
+            
+            if echo "$COMMITS" | grep -qiE "(BREAKING CHANGE|!:)"; then
+              RELEASE_TYPE="major"
+            elif echo "$COMMITS" | grep -qiE "^feat"; then
+              RELEASE_TYPE="minor"
+            else
+              RELEASE_TYPE="patch"
+            fi
+          fi
+          
+          # Incrementar versión
+          case "$RELEASE_TYPE" in
+            major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+          
+          NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+          echo "New version: ${NEW_VERSION}"
+      
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREV_TAG="${{ steps.current_version.outputs.current_version }}"
+          NEW_VERSION="${{ steps.version.outputs.new_version }}"
+          
+          # Generar changelog
+          echo "## 🚀 Release ${NEW_VERSION}" > CHANGELOG_TEMP.md
+          echo "" >> CHANGELOG_TEMP.md
+          echo "**Release Date:** $(date -u +"%Y-%m-%d")" >> CHANGELOG_TEMP.md
+          echo "" >> CHANGELOG_TEMP.md
+          
+          # Features
+          echo "### ✨ Features" >> CHANGELOG_TEMP.md
+          git log --oneline ${PREV_TAG}..HEAD --grep="^feat" 2>/dev/null | sed 's/^/- /' >> CHANGELOG_TEMP.md || echo "- No new features" >> CHANGELOG_TEMP.md
+          echo "" >> CHANGELOG_TEMP.md
+          
+          # Bug Fixes
+          echo "### 🐛 Bug Fixes" >> CHANGELOG_TEMP.md
+          git log --oneline ${PREV_TAG}..HEAD --grep="^fix" 2>/dev/null | sed 's/^/- /' >> CHANGELOG_TEMP.md || echo "- No bug fixes" >> CHANGELOG_TEMP.md
+          echo "" >> CHANGELOG_TEMP.md
+          
+          # Other changes
+          echo "### 📝 Other Changes" >> CHANGELOG_TEMP.md
+          git log --oneline ${PREV_TAG}..HEAD 2>/dev/null | grep -viE "^[a-f0-9]+ (feat|fix)" | head -10 | sed 's/^/- /' >> CHANGELOG_TEMP.md || echo "- No other changes" >> CHANGELOG_TEMP.md
+          
+          cat CHANGELOG_TEMP.md
+          
+          # Guardar para siguiente step
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          cat CHANGELOG_TEMP.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
+      - name: Create Git Tag
+        run: |
+          git tag -a "${{ steps.version.outputs.new_version }}" -m "Release ${{ steps.version.outputs.new_version }}"
+          git push origin "${{ steps.version.outputs.new_version }}"
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.new_version }}
+          name: Release ${{ steps.version.outputs.new_version }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================================
+  # JOB: Notify
+  # ============================================================
+  notify:
+    name: 📢 Notify
+    needs: release
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Post Summary
+        run: |
+          echo "## 🎉 Release Published!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ needs.release.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "${{ needs.release.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
