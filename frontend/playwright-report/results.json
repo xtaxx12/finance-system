@@ -1,0 +1,2165 @@
+{
+  "config": {
+    "configFile": "D:\\finance-system\\frontend\\playwright.config.js",
+    "rootDir": "D:/finance-system/frontend/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 4
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "open": "never"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "playwright-report/results.json"
+        }
+      ],
+      [
+        "github",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "D:/finance-system/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/finance-system/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/finance-system/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "D:/finance-system/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/finance-system/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "D:/finance-system/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/finance-system/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "D:/finance-system/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/finance-system/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "Mobile Safari",
+        "name": "Mobile Safari",
+        "testDir": "D:/finance-system/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 4,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "accessibility.spec.js",
+      "file": "accessibility.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Accessibility Tests",
+          "file": "accessibility.spec.js",
+          "line": 9,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should have proper heading structure",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 9493,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:07:59.342Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\accessibility-Accessibilit-c5e65-ve-proper-heading-structure-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-a4dbcb333acd365dfb87",
+              "file": "accessibility.spec.js",
+              "line": 10,
+              "column": 5
+            },
+            {
+              "title": "should have alt text on images",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 9476,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:07:59.348Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\accessibility-Accessibilit-3b463-uld-have-alt-text-on-images-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-307e7f278a9b15a07e7f",
+              "file": "accessibility.spec.js",
+              "line": 24,
+              "column": 5
+            },
+            {
+              "title": "should have proper form labels",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 8818,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:07:59.408Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\accessibility-Accessibilit-fe80a-uld-have-proper-form-labels-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-9c792e42ef56b3b7f861",
+              "file": "accessibility.spec.js",
+              "line": 45,
+              "column": 5
+            },
+            {
+              "title": "should have focusable interactive elements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 8986,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:07:59.304Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\accessibility-Accessibilit-aaa1d-usable-interactive-elements-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-e04972f127711292f05d",
+              "file": "accessibility.spec.js",
+              "line": 73,
+              "column": 5
+            },
+            {
+              "title": "should have sufficient color contrast",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 5092,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:10.082Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\accessibility-Accessibilit-fff64-e-sufficient-color-contrast-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-1828223f42c7e5d74a29",
+              "file": "accessibility.spec.js",
+              "line": 92,
+              "column": 5
+            },
+            {
+              "title": "should support keyboard navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 5360,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:10.333Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\accessibility-Accessibilit-bf7b3-support-keyboard-navigation-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-ddb600f141ad24ddac3b",
+              "file": "accessibility.spec.js",
+              "line": 106,
+              "column": 5
+            },
+            {
+              "title": "should have skip links or landmark regions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 6081,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:11.783Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\accessibility-Accessibilit-f07ca-p-links-or-landmark-regions-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-27563ee3233c68c929a6",
+              "file": "accessibility.spec.js",
+              "line": 122,
+              "column": 5
+            },
+            {
+              "title": "should have proper button types",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5675,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:12.289Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\accessibility-Accessibilit-b5919-ld-have-proper-button-types-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-cd98847fb7b476f35182",
+              "file": "accessibility.spec.js",
+              "line": 137,
+              "column": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "api-integration.spec.js",
+      "file": "api-integration.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "API Integration",
+          "file": "api-integration.spec.js",
+          "line": 11,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "API Health Checks",
+              "file": "api-integration.spec.js",
+              "line": 12,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "should respond to API base endpoint",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 553,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:17.107Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\api-integration-API-Integr-745be-espond-to-API-base-endpoint-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "026ec64a5ba4d795099b-2e84d4a5e5b0b62f28ba",
+                  "file": "api-integration.spec.js",
+                  "line": 13,
+                  "column": 9
+                },
+                {
+                  "title": "should have CORS configured correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 438,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:17.633Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\api-integration-API-Integr-9892b-e-CORS-configured-correctly-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "026ec64a5ba4d795099b-d953ae66de9759a21828",
+                  "file": "api-integration.spec.js",
+                  "line": 25,
+                  "column": 9
+                },
+                {
+                  "title": "should provide CSRF token endpoint",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 54,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:17.815Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\api-integration-API-Integr-1c702-provide-CSRF-token-endpoint-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "026ec64a5ba4d795099b-ebe0680be7c13bbb7bde",
+                  "file": "api-integration.spec.js",
+                  "line": 45,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "API Endpoints",
+              "file": "api-integration.spec.js",
+              "line": 59,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "should require authentication for transactions",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "API server not available",
+                          "location": {
+                            "file": "D:\\finance-system\\frontend\\e2e\\api-integration.spec.js",
+                            "line": 67,
+                            "column": 22
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
+                          "status": "skipped",
+                          "duration": 100,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:17.945Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "description": "API server not available",
+                              "location": {
+                                "file": "D:\\finance-system\\frontend\\e2e\\api-integration.spec.js",
+                                "line": 67,
+                                "column": 22
+                              }
+                            }
+                          ],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\api-integration-API-Integr-f1a05-entication-for-transactions-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "026ec64a5ba4d795099b-8558bbe553f608b756d1",
+                  "file": "api-integration.spec.js",
+                  "line": 60,
+                  "column": 9
+                },
+                {
+                  "title": "should require authentication for expenses",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "API server not available",
+                          "location": {
+                            "file": "D:\\finance-system\\frontend\\e2e\\api-integration.spec.js",
+                            "line": 77,
+                            "column": 22
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 3,
+                          "status": "skipped",
+                          "duration": 65,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:18.151Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "description": "API server not available",
+                              "location": {
+                                "file": "D:\\finance-system\\frontend\\e2e\\api-integration.spec.js",
+                                "line": 77,
+                                "column": 22
+                              }
+                            }
+                          ],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\api-integration-API-Integr-e0902-authentication-for-expenses-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "026ec64a5ba4d795099b-caec929a69ec6b16692a",
+                  "file": "api-integration.spec.js",
+                  "line": 71,
+                  "column": 9
+                },
+                {
+                  "title": "should expose categories endpoint",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "API server not available",
+                          "location": {
+                            "file": "D:\\finance-system\\frontend\\e2e\\api-integration.spec.js",
+                            "line": 88,
+                            "column": 22
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
+                          "status": "skipped",
+                          "duration": 95,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:18.170Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "description": "API server not available",
+                              "location": {
+                                "file": "D:\\finance-system\\frontend\\e2e\\api-integration.spec.js",
+                                "line": 88,
+                                "column": 22
+                              }
+                            }
+                          ],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\api-integration-API-Integr-95f3a--expose-categories-endpoint-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "026ec64a5ba4d795099b-4db863435a0b6255989a",
+                  "file": "api-integration.spec.js",
+                  "line": 81,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Frontend-Backend Integration",
+              "file": "api-integration.spec.js",
+              "line": 93,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "should make API requests from frontend",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 8250,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:18.284Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\api-integration-API-Integr-e1fcc--API-requests-from-frontend-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "026ec64a5ba4d795099b-8bb62ce9a5aa622596a0",
+                  "file": "api-integration.spec.js",
+                  "line": 94,
+                  "column": 9
+                },
+                {
+                  "title": "should handle API errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 5746,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:18.424Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\api-integration-API-Integr-adeb7-andle-API-errors-gracefully-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "026ec64a5ba4d795099b-37289e5d33f69936c2a6",
+                  "file": "api-integration.spec.js",
+                  "line": 115,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "auth.spec.js",
+      "file": "auth.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Authentication Flow",
+          "file": "auth.spec.js",
+          "line": 9,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display login page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 4601,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:21.239Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\auth-Authentication-Flow-should-display-login-page-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d5ed79a6b333c2ba7209-5d15ed19bb786409f7d5",
+              "file": "auth.spec.js",
+              "line": 14,
+              "column": 5
+            },
+            {
+              "title": "should show error with invalid credentials",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 11287,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:21.604Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\auth-Authentication-Flow-s-22fb7-or-with-invalid-credentials-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d5ed79a6b333c2ba7209-6d030ad220892425cae6",
+              "file": "auth.spec.js",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "should show validation errors for empty fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 5162,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:25.870Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\auth-Authentication-Flow-s-4800c-ion-errors-for-empty-fields-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d5ed79a6b333c2ba7209-6397cd1c3cb74ccdec36",
+              "file": "auth.spec.js",
+              "line": 44,
+              "column": 5
+            },
+            {
+              "title": "should display registration page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 8002,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:26.966Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\auth-Authentication-Flow-should-display-registration-page-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d5ed79a6b333c2ba7209-1eb4175a278d07366961",
+              "file": "auth.spec.js",
+              "line": 55,
+              "column": 5
+            },
+            {
+              "title": "should navigate between login and register",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 7849,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:29.423Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\auth-Authentication-Flow-s-be5b3--between-login-and-register-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d5ed79a6b333c2ba7209-edced50b9814af19c703",
+              "file": "auth.spec.js",
+              "line": 77,
+              "column": 5
+            },
+            {
+              "title": "should redirect unauthenticated users",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 6081,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:32.988Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\auth-Authentication-Flow-s-db195-irect-unauthenticated-users-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d5ed79a6b333c2ba7209-4a9f221f5646ccb915b6",
+              "file": "auth.spec.js",
+              "line": 96,
+              "column": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "dashboard.spec.js",
+      "file": "dashboard.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Dashboard",
+          "file": "dashboard.spec.js",
+          "line": 9,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Public Access",
+              "file": "dashboard.spec.js",
+              "line": 11,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "should load the application",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 4507,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:36.087Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\dashboard-Dashboard-Public-7b2a6-should-load-the-application-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "a1bb41a2bd6df77ed2f7-84cdd28f3b79c6ade5fa",
+                  "file": "dashboard.spec.js",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should have correct page title",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 4269,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:36.873Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\dashboard-Dashboard-Public-99dd7-uld-have-correct-page-title-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "a1bb41a2bd6df77ed2f7-c638a87c44a2a93e2ccb",
+                  "file": "dashboard.spec.js",
+                  "line": 19,
+                  "column": 9
+                },
+                {
+                  "title": "should be responsive",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 3573,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:40.154Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\dashboard-Dashboard-Public-Access-should-be-responsive-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "a1bb41a2bd6df77ed2f7-5c4a4e6fab0eefc7ed9c",
+                  "file": "dashboard.spec.js",
+                  "line": 27,
+                  "column": 9
+                },
+                {
+                  "title": "should load assets correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 3743,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:40.982Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\dashboard-Dashboard-Public-8eba5-hould-load-assets-correctly-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "a1bb41a2bd6df77ed2f7-66ae86d312eef791bb0e",
+                  "file": "dashboard.spec.js",
+                  "line": 43,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Dashboard Features",
+              "file": "dashboard.spec.js",
+              "line": 65,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "should display navigation menu",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 4675,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:41.878Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\dashboard-Dashboard-Dashbo-df562-uld-display-navigation-menu-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "a1bb41a2bd6df77ed2f7-1eac09b54ff9fd19c350",
+                  "file": "dashboard.spec.js",
+                  "line": 66,
+                  "column": 9
+                },
+                {
+                  "title": "should display main content area",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 4649,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:42.304Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\dashboard-Dashboard-Dashbo-945b0-d-display-main-content-area-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "a1bb41a2bd6df77ed2f7-cb8e122f4e89cc9f6a13",
+                  "file": "dashboard.spec.js",
+                  "line": 77,
+                  "column": 9
+                },
+                {
+                  "title": "should not have console errors",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 4808,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [
+                            {
+                              "text": "Console errors found: [\n  \u001b[32m\"Access to fetch at 'http://localhost:8000/api/auth/profile/' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.\"\u001b[39m,\n  \u001b[32m\"Access to fetch at 'http://localhost:8000/api/auth/profile/' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.\"\u001b[39m\n]\n"
+                            }
+                          ],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:44.472Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\dashboard-Dashboard-Dashbo-5c8f1-uld-not-have-console-errors-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "a1bb41a2bd6df77ed2f7-e419f39267b22ab27c31",
+                  "file": "dashboard.spec.js",
+                  "line": 89,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "performance.spec.js",
+      "file": "performance.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Performance Tests",
+          "file": "performance.spec.js",
+          "line": 9,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load initial page within acceptable time",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 4798,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Page load time: 1372ms\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:45.557Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\performance-Performance-Te-9d562-page-within-acceptable-time-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "0395ec5c307b4a8c0388-f1fa496f799d2d6cd5c2",
+              "file": "performance.spec.js",
+              "line": 10,
+              "column": 5
+            },
+            {
+              "title": "should complete LCP within threshold",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3588,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "LCP: 2028ms\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:47.317Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\performance-Performance-Te-2c6de-mplete-LCP-within-threshold-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "0395ec5c307b4a8c0388-ad0c127e9279f964985a",
+              "file": "performance.spec.js",
+              "line": 24,
+              "column": 5
+            },
+            {
+              "title": "should not have memory leaks on navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 15808,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Memory increase: 0.00%\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:48.462Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\performance-Performance-Te-d7dda--memory-leaks-on-navigation-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "0395ec5c307b4a8c0388-f9c77b8bb714f7a953f5",
+              "file": "performance.spec.js",
+              "line": 50,
+              "column": 5
+            },
+            {
+              "title": "should load JavaScript bundles efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 7942,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Total JS size: 3688.12 KB\n"
+                        },
+                        {
+                          "text": "Number of JS files: 11\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:50.809Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\performance-Performance-Te-be433-aScript-bundles-efficiently-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "0395ec5c307b4a8c0388-da91d90db86cdd7a232d",
+              "file": "performance.spec.js",
+              "line": 86,
+              "column": 5
+            },
+            {
+              "title": "should have efficient network requests",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 6830,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Total requests: 46\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:50.890Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\performance-Performance-Te-2963e--efficient-network-requests-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "0395ec5c307b4a8c0388-6eee7e1a3598a0d980a1",
+              "file": "performance.spec.js",
+              "line": 119,
+              "column": 5
+            },
+            {
+              "title": "should respond quickly to user interactions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6695,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Input interaction time: 840ms\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-12-19T16:08:51.481Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\finance-system\\frontend\\test-results\\performance-Performance-Te-ec2b1-uickly-to-user-interactions-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "0395ec5c307b4a8c0388-3b6370bb39f972305a0a",
+              "file": "performance.spec.js",
+              "line": 140,
+              "column": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "transactions.spec.js",
+      "file": "transactions.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Transactions Management",
+          "file": "transactions.spec.js",
+          "line": 9,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Income Management Page",
+              "file": "transactions.spec.js",
+              "line": 10,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "should navigate to incomes page",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "D:\\finance-system\\frontend\\e2e\\transactions.spec.js",
+                            "line": 27,
+                            "column": 22
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
+                          "status": "skipped",
+                          "duration": 4446,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:58.721Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "D:\\finance-system\\frontend\\e2e\\transactions.spec.js",
+                                "line": 27,
+                                "column": 22
+                              }
+                            }
+                          ],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\transactions-Transactions--da2b8-ld-navigate-to-incomes-page-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "79295803e76b44b7a1bc-e86196164a4b1751f1d1",
+                  "file": "transactions.spec.js",
+                  "line": 11,
+                  "column": 9
+                },
+                {
+                  "title": "should display income form elements",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 4003,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:59.003Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\transactions-Transactions--e49a4-isplay-income-form-elements-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "79295803e76b44b7a1bc-18be381e3e53edc79e73",
+                  "file": "transactions.spec.js",
+                  "line": 31,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Expense Management Page",
+              "file": "transactions.spec.js",
+              "line": 55,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "should navigate to expenses page",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "D:\\finance-system\\frontend\\e2e\\transactions.spec.js",
+                            "line": 71,
+                            "column": 22
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 3,
+                          "status": "skipped",
+                          "duration": 3949,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:08:59.761Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "D:\\finance-system\\frontend\\e2e\\transactions.spec.js",
+                                "line": 71,
+                                "column": 22
+                              }
+                            }
+                          ],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\transactions-Transactions--314cc-d-navigate-to-expenses-page-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "79295803e76b44b7a1bc-14162f0b8f1490777618",
+                  "file": "transactions.spec.js",
+                  "line": 56,
+                  "column": 9
+                },
+                {
+                  "title": "should display expense form elements",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 4494,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:09:03.655Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\transactions-Transactions--32076-splay-expense-form-elements-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "79295803e76b44b7a1bc-8058caf79a087723068f",
+                  "file": "transactions.spec.js",
+                  "line": 75,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Transaction Form Validation",
+              "file": "transactions.spec.js",
+              "line": 97,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "should validate required fields in income form",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 4902,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:09:03.890Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\transactions-Transactions--f864a-uired-fields-in-income-form-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "79295803e76b44b7a1bc-448929bf8b91efc94dae",
+                  "file": "transactions.spec.js",
+                  "line": 98,
+                  "column": 9
+                },
+                {
+                  "title": "should validate amount is positive",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 4760,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:09:04.613Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\transactions-Transactions--e1908-validate-amount-is-positive-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "79295803e76b44b7a1bc-af1803f17213273f5498",
+                  "file": "transactions.spec.js",
+                  "line": 129,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Transaction List",
+              "file": "transactions.spec.js",
+              "line": 152,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "should display transactions table or list",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 5210,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:09:07.074Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\transactions-Transactions--ba589--transactions-table-or-list-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "79295803e76b44b7a1bc-9f2621b9cf7ef024aa91",
+                  "file": "transactions.spec.js",
+                  "line": 153,
+                  "column": 9
+                },
+                {
+                  "title": "should have empty state or data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 4979,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-12-19T16:09:08.733Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "D:\\finance-system\\frontend\\test-results\\transactions-Transactions--6d9aa-ld-have-empty-state-or-data-chromium\\trace.zip"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "79295803e76b44b7a1bc-5cfb28b665c47d0cfab1",
+                  "file": "transactions.spec.js",
+                  "line": 173,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-12-19T16:07:55.325Z",
+    "duration": 78864.28,
+    "expected": 38,
+    "skipped": 5,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
