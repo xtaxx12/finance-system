@@ -1,6 +1,6 @@
 {
-    "installCommand": "npm install --force",
-    "buildCommand": "chmod +x node_modules/.bin/* && npm run build",
+    "installCommand": "npm cache clean --force && npm install",
+    "buildCommand": "npx vite@6 build",
     "outputDirectory": "build",
     "framework": "vite"
 }
