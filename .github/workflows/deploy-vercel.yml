@@ -55,8 +55,8 @@ jobs:
         id: deploy
         working-directory: frontend
         run: |
-          # Deploy usando el directorio dist ya construido
-          vercel deploy ./dist --prod --yes \
+          # Deploy usando el directorio build ya construido
+          vercel deploy ./build --prod --yes \
             --token=${{ secrets.VERCEL_TOKEN }} \
             --scope=${{ secrets.VERCEL_ORG_ID }} \
             --name=finance-frontend \
