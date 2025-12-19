@@ -1,0 +1,165 @@
+# ====================================================================
+# Vercel Deploy Pipeline - Finance System
+# Author: Senior DevOps Engineer
+# Description: Deploy a Vercel solo después de que CI pase
+# ====================================================================
+
+name: 🚀 Deploy to Vercel
+
+on:
+  push:
+    branches: [main]
+  workflow_run:
+    workflows: ["🔄 CI Pipeline"]
+    types: [completed]
+    branches: [main]
+
+# Solo ejecutar si CI pasó
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ============================================================
+  # JOB: Verificar que CI pasó
+  # ============================================================
+  check-ci:
+    name: ✅ Verify CI Status
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    outputs:
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
+    steps:
+      - name: Check CI workflow status
+        id: check
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_run" ]; then
+            if [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
+              echo "should_deploy=true" >> $GITHUB_OUTPUT
+              echo "✅ CI passed - proceeding with deploy"
+            else
+              echo "should_deploy=false" >> $GITHUB_OUTPUT
+              echo "❌ CI failed - skipping deploy"
+            fi
+          else
+            # Para push directo, verificar el estado del commit
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+            echo "📦 Direct push - will wait for CI"
+          fi
+
+  # ============================================================
+  # JOB: Esperar a que CI termine (solo para push directo)
+  # ============================================================
+  wait-for-ci:
+    name: ⏳ Wait for CI
+    runs-on: ubuntu-latest
+    needs: check-ci
+    if: github.event_name == 'push'
+    steps:
+      - name: Wait for CI Pipeline to complete
+        uses: fountainhead/action-wait-for-check@v1.2.0
+        id: wait-for-ci
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "📊 CI Summary"
+          ref: ${{ github.sha }}
+          timeoutSeconds: 600
+          intervalSeconds: 30
+      
+      - name: Check CI result
+        if: steps.wait-for-ci.outputs.conclusion != 'success'
+        run: |
+          echo "❌ CI Pipeline failed or timed out"
+          echo "Conclusion: ${{ steps.wait-for-ci.outputs.conclusion }}"
+          exit 1
+
+  # ============================================================
+  # JOB: Deploy Frontend a Vercel
+  # ============================================================
+  deploy-frontend:
+    name: 🎨 Deploy Frontend
+    runs-on: ubuntu-latest
+    needs: [check-ci, wait-for-ci]
+    if: |
+      always() &&
+      (needs.wait-for-ci.result == 'success' || needs.wait-for-ci.result == 'skipped') &&
+      needs.check-ci.outputs.should_deploy == 'true'
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+      
+      - name: Pull Vercel Environment
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: frontend
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      
+      - name: Build Project
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: frontend
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "🚀 Deployed to: $URL"
+        working-directory: frontend
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      
+      - name: Comment Deploy URL
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🚀 **Deployed to Vercel!**\n\n' +
+                    '**URL:** ${{ steps.deploy.outputs.url }}\n\n' +
+                    '**Commit:** `${{ github.sha }}`'
+            })
+
+  # ============================================================
+  # JOB: Resumen de Deploy
+  # ============================================================
+  deploy-summary:
+    name: 📋 Deploy Summary
+    runs-on: ubuntu-latest
+    needs: [deploy-frontend]
+    if: always()
+    steps:
+      - name: Generate Summary
+        run: |
+          echo "## 🚀 Deploy Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Component | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Frontend | ${{ needs.deploy-frontend.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ needs.deploy-frontend.result }}" == "success" ]; then
+            echo "✅ **Deploy completed successfully!**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Deploy failed or was skipped**" >> $GITHUB_STEP_SUMMARY
+          fi
