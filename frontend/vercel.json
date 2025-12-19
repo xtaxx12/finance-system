@@ -1,6 +1,5 @@
 {
-    "installCommand": "npm install",
-    "buildCommand": "chmod +x node_modules/.bin/* 2>/dev/null; npx -y vite@latest build",
+    "buildCommand": "chmod +x node_modules/.bin/* && node ./node_modules/vite/bin/vite.js build",
     "outputDirectory": "build",
     "framework": "vite"
 }
