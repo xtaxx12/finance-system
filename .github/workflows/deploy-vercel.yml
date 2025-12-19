@@ -51,36 +51,53 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
+      - name: Setup Vercel project config
+        working-directory: frontend
+        run: |
+          mkdir -p .vercel
+          echo '{"projectId":"${{ secrets.VERCEL_PROJECT_ID }}","orgId":"${{ secrets.VERCEL_ORG_ID }}"}' > .vercel/project.json
+          cat .vercel/project.json
+
+      - name: Pull Vercel environment
+        working-directory: frontend
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Build with Vercel
+        working-directory: frontend
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
       - name: Deploy to Vercel
         id: deploy
         working-directory: frontend
         run: |
-          # Deploy usando el directorio build ya construido
-          vercel deploy ./build --prod --yes \
-            --token=${{ secrets.VERCEL_TOKEN }} \
-            --scope=${{ secrets.VERCEL_ORG_ID }} \
-            --name=finance-frontend \
-            2>&1 | tee deployment-output.txt
+          DEPLOY_URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+          echo "Full output: $DEPLOY_URL"
           
-          # Extraer URL del deployment
-          DEPLOY_URL=$(grep -oE 'https://[a-zA-Z0-9.-]+\.vercel\.app' deployment-output.txt | tail -1)
+          # Extraer URL
+          URL=$(echo "$DEPLOY_URL" | grep -oE 'https://[a-zA-Z0-9.-]+\.vercel\.app' | head -1)
           
-          if [ -n "$DEPLOY_URL" ]; then
-            echo "url=$DEPLOY_URL" >> $GITHUB_OUTPUT
-            echo "✅ Deployed successfully to: $DEPLOY_URL"
+          if [ -n "$URL" ]; then
+            echo "url=$URL" >> $GITHUB_OUTPUT
+            echo "✅ Deployed to: $URL"
           else
-            echo "⚠️ Output:"
-            cat deployment-output.txt
-            # Intentar con URL por defecto
-            echo "url=https://finance-frontend-xtaxx12s-projects.vercel.app" >> $GITHUB_OUTPUT
+            echo "url=https://finance-frontend.vercel.app" >> $GITHUB_OUTPUT
+            echo "⚠️ Could not extract URL"
           fi
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Deploy Summary
         run: |
           echo "## 🚀 Deploy Completed!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Commit:** \`${{ github.event.workflow_run.head_sha }}\`" >> $GITHUB_STEP_SUMMARY
 
   # ============================================================
@@ -94,6 +111,5 @@ jobs:
       - name: Log skip reason
         run: |
           echo "## ⏭️ Deploy Skipped" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Reason:** CI Pipeline did not pass" >> $GITHUB_STEP_SUMMARY
           echo "**CI Result:** ${{ github.event.workflow_run.conclusion }}" >> $GITHUB_STEP_SUMMARY
