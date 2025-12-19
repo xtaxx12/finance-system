@@ -7,92 +7,35 @@
 name: 🚀 Deploy to Vercel
 
 on:
-  push:
-    branches: [main]
+  # Solo se ejecuta cuando CI Pipeline termina
   workflow_run:
     workflows: ["🔄 CI Pipeline"]
     types: [completed]
     branches: [main]
 
-# Solo ejecutar si CI pasó
 concurrency:
   group: deploy-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
 jobs:
-  # ============================================================
-  # JOB: Verificar que CI pasó
-  # ============================================================
-  check-ci:
-    name: ✅ Verify CI Status
-    runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'push' ||
-      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
-    outputs:
-      should_deploy: ${{ steps.check.outputs.should_deploy }}
-    steps:
-      - name: Check CI workflow status
-        id: check
-        run: |
-          if [ "${{ github.event_name }}" == "workflow_run" ]; then
-            if [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
-              echo "should_deploy=true" >> $GITHUB_OUTPUT
-              echo "✅ CI passed - proceeding with deploy"
-            else
-              echo "should_deploy=false" >> $GITHUB_OUTPUT
-              echo "❌ CI failed - skipping deploy"
-            fi
-          else
-            # Para push directo, verificar el estado del commit
-            echo "should_deploy=true" >> $GITHUB_OUTPUT
-            echo "📦 Direct push - will wait for CI"
-          fi
-
-  # ============================================================
-  # JOB: Esperar a que CI termine (solo para push directo)
-  # ============================================================
-  wait-for-ci:
-    name: ⏳ Wait for CI
-    runs-on: ubuntu-latest
-    needs: check-ci
-    if: github.event_name == 'push'
-    steps:
-      - name: Wait for CI Pipeline to complete
-        uses: fountainhead/action-wait-for-check@v1.2.0
-        id: wait-for-ci
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: "📊 CI Summary"
-          ref: ${{ github.sha }}
-          timeoutSeconds: 600
-          intervalSeconds: 30
-      
-      - name: Check CI result
-        if: steps.wait-for-ci.outputs.conclusion != 'success'
-        run: |
-          echo "❌ CI Pipeline failed or timed out"
-          echo "Conclusion: ${{ steps.wait-for-ci.outputs.conclusion }}"
-          exit 1
-
   # ============================================================
   # JOB: Deploy Frontend a Vercel
   # ============================================================
-  deploy-frontend:
+  deploy:
     name: 🎨 Deploy Frontend
     runs-on: ubuntu-latest
-    needs: [check-ci, wait-for-ci]
-    if: |
-      always() &&
-      (needs.wait-for-ci.result == 'success' || needs.wait-for-ci.result == 'skipped') &&
-      needs.check-ci.outputs.should_deploy == 'true'
-    environment:
-      name: production
-      url: ${{ steps.deploy.outputs.url }}
+    # Solo ejecutar si CI pasó
+    if: github.event.workflow_run.conclusion == 'success'
     
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -102,64 +45,68 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
       
-      - name: Pull Vercel Environment
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Create Vercel Project Config
         working-directory: frontend
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          mkdir -p .vercel
+          echo '{"projectId":"${{ secrets.VERCEL_PROJECT_ID }}","orgId":"${{ secrets.VERCEL_ORG_ID }}"}' > .vercel/project.json
+          cat .vercel/project.json
       
-      - name: Build Project
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Install dependencies
         working-directory: frontend
+        run: npm ci || npm install
+
+      - name: Build project
+        working-directory: frontend
+        run: npm run build
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL || 'https://finance-backend-k12z.onrender.com/api' }}
       
       - name: Deploy to Vercel
         id: deploy
-        run: |
-          URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
-          echo "url=$URL" >> $GITHUB_OUTPUT
-          echo "🚀 Deployed to: $URL"
         working-directory: frontend
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      
-      - name: Comment Deploy URL
-        uses: actions/github-script@v7
-        if: github.event_name == 'pull_request'
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '🚀 **Deployed to Vercel!**\n\n' +
-                    '**URL:** ${{ steps.deploy.outputs.url }}\n\n' +
-                    '**Commit:** `${{ github.sha }}`'
-            })
+        run: |
+          # Deploy prebuilt
+          URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+          
+          # Si falla prebuild, intentar deploy normal
+          if [[ ! "$URL" =~ "https://" ]]; then
+            echo "Prebuilt failed, trying normal deploy..."
+            URL=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+          fi
+          
+          # Extraer URL
+          DEPLOY_URL=$(echo "$URL" | grep -oE 'https://[a-zA-Z0-9.-]+\.vercel\.app' | head -1)
+          
+          if [ -z "$DEPLOY_URL" ]; then
+            echo "❌ Could not extract deploy URL. Full output:"
+            echo "$URL"
+            # Intentar obtener URL del output
+            DEPLOY_URL=$(echo "$URL" | tail -1)
+          fi
+          
+          echo "url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+          echo "✅ Deployed to: $DEPLOY_URL"
+
+      - name: Deploy Summary
+        run: |
+          echo "## 🚀 Deploy Completed!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** \`${{ github.event.workflow_run.head_sha }}\`" >> $GITHUB_STEP_SUMMARY
 
   # ============================================================
-  # JOB: Resumen de Deploy
+  # JOB: Notificar si CI falló
   # ============================================================
-  deploy-summary:
-    name: 📋 Deploy Summary
+  ci-failed:
+    name: ⏭️ CI Failed - Skip Deploy
     runs-on: ubuntu-latest
-    needs: [deploy-frontend]
-    if: always()
+    if: github.event.workflow_run.conclusion != 'success'
     steps:
-      - name: Generate Summary
+      - name: Log skip reason
         run: |
-          echo "## 🚀 Deploy Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## ⏭️ Deploy Skipped" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Component | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Frontend | ${{ needs.deploy-frontend.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ needs.deploy-frontend.result }}" == "success" ]; then
-            echo "✅ **Deploy completed successfully!**" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "❌ **Deploy failed or was skipped**" >> $GITHUB_STEP_SUMMARY
-          fi
+          echo "**Reason:** CI Pipeline did not pass" >> $GITHUB_STEP_SUMMARY
+          echo "**CI Result:** ${{ github.event.workflow_run.conclusion }}" >> $GITHUB_STEP_SUMMARY
