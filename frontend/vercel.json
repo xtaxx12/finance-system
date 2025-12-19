@@ -1,6 +1,5 @@
 {
   "framework": "vite",
-  "buildCommand": "npm install && npm run build",
-  "outputDirectory": "build",
-  "installCommand": "npm install"
+  "buildCommand": "npm cache clean --force && rm -rf node_modules package-lock.json && npm install && npm run build",
+  "outputDirectory": "build"
 }
