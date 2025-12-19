@@ -6,12 +6,6 @@
 
 version: 2
 
-registries:
-  npm-registry:
-    type: npm-registry
-    url: https://registry.npmjs.org
-    replaces-base: true
-
 updates:
   # Python dependencies (Backend)
   - package-ecosystem: "pip"
